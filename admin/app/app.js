@@ -1,5 +1,5 @@
 var app = angular.module('estore', ["ngRoute", "ui.bootstrap", "ui.tinymce", "ngSanitize"]);
-baseUrl = 'http://localhost/e_shop/mileeeeeeeeeeeeeeeeeeee/api/index.php';
+baseUrl = 'http://localhost/mileeeeeeeeeeeeeeeeeeee/api/index.php';
 
 app.run(function ($rootScope, $http, $window, $location, sessionService) {
 
