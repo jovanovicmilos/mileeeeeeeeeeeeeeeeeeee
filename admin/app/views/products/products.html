@@ -1,0 +1,237 @@
+<div>
+    <!-- modals -->
+    <add-product></add-product>
+    <delete-product></delete-product>
+    <detail-product></detail-product>
+    <section class="content-header">
+        <h1>
+            Products
+            <small>Control panel</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Products</a></li>
+        </ol>
+    </section>
+    <section ng-style="{'padding':'15px'}">
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>{{ total.products }}</h3>
+                        <p>Total Products</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="#/" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>{{ total.brands }}</h3>
+
+                        <p>Total Brands</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#/brands" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>{{ total.users }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>{{ total.orders }}</h3>
+                        <p>Total Orders</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section ng-style="{'padding':'0 15px'}">
+        <a href="javascript:void(0)" ng-click="showfilters = !showfilters">
+            <span ng-show="showfilters">Show filters <i class='fa fa-angle-up'></i></span>
+            <span ng-hide="showfilters">Hide filters <i class='fa fa-angle-down'></i></span>
+        </a>
+        <div class="box box-info" ng-hide="showfilters">
+            <div class="box-header with-border">
+                <h4>Search by:</h4>
+            </div>
+            <div class="box-body">
+                <form>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <label>Title</label>
+                            <input type="text" class="form-control" ng-model="filter.title" placeholder="Title">
+                        </div>
+                        <div class="col-xs-2">
+                            <label>Sizes</label>
+                            <select class="form-control" ng-model="filter.size_id" ng-change="filterProducts()">
+                            <option value="">- All sizes -</option>
+                            <option ng-repeat='s in sizes' value="{{s.id}}">{{s.name}}</option>
+                        </select>
+                        </div>
+                        <div class="col-xs-2">
+                            <label>Brands</label>
+                            <select class="form-control" ng-model="filter.brand_id" ng-change="filterProducts()">
+                            <option value="">- All brands -</option>
+                            <option ng-repeat='b in brands' value="{{b.id}}">{{b.name}}</option>
+                        </select>
+                        </div>
+                        <div class="col-xs-2">
+                            <label>Gender</label>
+                            <select class="form-control" ng-model="filter.gender" ng-change="filterProducts()">
+                            <option value="">- All gender -</option>
+                            <option ng-repeat='g in genders' value="{{g.id}}">{{g.name}}</option>
+                        </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="col-md-12">
+
+                                <label>Price</label></div>
+                            <div class="col-md-6">
+
+                                <input type="text" class="form-control" ng-model="filter.priceFrom" placeholder="From">
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <input type="text" class="form-control" ng-model="filter.priceTo" placeholder="To">
+
+                            </div>
+
+                        </div>
+                    </div><br/>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Date updated from</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.update_date" is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close" />
+                                <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                            </p>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label>Date inserted from</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.insert_date" is-open="popup2.opened" datepicker-options="dateOptions" close-text="Close" />
+                                <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                            </p>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="filter.price_discount" value="">Only with discount price</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-12"><br/>
+                            <button class="btn btn-primary pull-right" type="submit" ng-click="filterProducts()">Search <i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box" style="overflow-y:auto">
+                    <div class="box-header">
+                        <h3 class="box-title">Products</h3>
+                        <button type="button" class="btn btn-success pull-right" ng-click="addProductModal()"><i class="fa fa-plus"></i> Add new product</button>
+                    </div>
+                    <div class="box-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th> <input type="checkbox" ng-model="checkAll" ng-click="multipleSelect.checkAllOnPage(products.data, 'id', checkAll)" ng-checked="multipleSelect.isAllChecked(products.data, 'id', false)" /></th>
+                                    <th>Actions</th>
+                                    <th></th>
+                                    <th>Title <span class="flag-icon flag-icon-se"></span> ( Title <span class="flag-icon flag-icon-gb"></span> )</th>
+                                    <th>Brand</th>
+                                    <th>Price (<small class="label bg-green">new</small>) &euro;</th>
+                                    <th>Gender/s</th>
+                                    <th>Size: Quantity</th>
+                                    <th>Description</th>
+                                    <th>Date added</th>
+                                    <th>Date updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="p in products.data">
+                                    <td><input type="checkbox" ng-checked="multipleSelect.exist(p.id)" ng-click="multipleSelect.check(p.id)" /></td>
+                                    <td class="action-buttons">
+                                        <div ng-click="editProductModal(p)"><i class='fa fa-edit'></i><small> EDIT</small></div>
+                                        <div ng-click="detailProductModal(p)"><i class='fa fa-search'></i><small> SHOW</small></div>
+                                        <div ng-click="deleteProductModal(p)" class="text-danger"><i class='fa fa-trash'></i> <small>DELETE</small></div>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat='i in p.images'>
+                                        <img src="images/products/{{i.image_path}}" alt="" style="height: 150px">
+                                        </span>
+                                    </td>
+                                    <td><a href="javascript:void(0);" ng-click="editProductModal(p)">{{ p.title }} ({{p.title_en}})</a></td>
+                                    <td>{{ p.brand.name }}</td>
+                                    <td><span ng-class="{'price-discount': p.price_discount == 1}">{{ p.price | number:2 }}</span>
+                                        <span ng-if="p.price_discount == 1">({{ p.price_new | number:2 }})</span></td>
+                                    <td>
+                                        <span ng-if="p.gender == 0" ng-style="{'color':'#00C0EF'}"><i class="fa fa-male" aria-hidden="true"></i> Male</span>
+                                        <span ng-if="p.gender == 1"><i class="fa fa-female" ng-style="{'color':'#b2497d'}" aria-hidden="true"></i> Female</span>
+                                    </td>
+                                    <td>
+                                        <span ng-repeat="s in p.sizes"><b>{{ s.name }}</b>: {{s.quantity}} <span ng-if="p.sizes.length !== ($index + 1)"><br/></span></span>
+                                    </td>
+
+                                    <td>{{ p.short_description | limitTo:30}}</td>
+                                    <td>{{ formatDate(p.insert_date) | date:'dd.MM.yyyy'}}</td>
+                                    <td>{{ formatDate(p.update_date) | date:'dd.MM.yyyy'}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                        <div class="col-xs-12 text-center">
+                            <h5 class="text-danger" ng-if='products.total <= 0'><b>No data</b></h5>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <ul uib-pagination total-items="products.total" ng-model="filter.page" ng-click="filterProducts()" max-size="filter.top" items-per-page="filter.top" class="pagination-sm pull-left" boundary-link-numbers="true" rotate="false"></ul>
+                <p class="pull-right">Total: {{ products.total }}</p>
+                <div class="pull-left" style="padding:20px 0 0 5px">
+                    <select class="pull-left" style="width:50px;" ng-model='filter.top' ng-change="changeTotal()" ng-style="{'padding': '4px'}">
+                    <option ng-value="10">10</option>
+                    <option ng-value="30">30</option>
+                    <option ng-value="60">60</option>
+                    <option ng-value="90">90</option>
+                </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

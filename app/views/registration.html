@@ -1,0 +1,49 @@
+<div class="container" id="registration">
+    <div class="registration-form">
+        <h3>Registration</h3>
+        <form>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="firstName">Firstname:</label>
+                    <input type="text" class="form-control" id="firstName" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="lastName">Lastname:</label>
+                    <input type="text" class="form-control" id="lastName" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"><label for="firstName">Date of birth:</label></div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" required>
+                        <option value="">- Day -</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control" required>
+                        <option value="1">- Month -</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <select class="form-control" required>
+                        <option value="1">- Year -</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="radio-inline"><input type="radio" name="optradio"> Male</label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label class="radio-inline"><input type="radio" name="optradio"> Female</label>
+            </div><br/>
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg pull-right">Sign Up <i class='fa fa-sign-in'></i></button>
+        </form>
+    </div>
+</div>

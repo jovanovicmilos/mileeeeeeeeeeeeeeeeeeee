@@ -1,0 +1,94 @@
+<div id="cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="list-group col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                        <form>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Firstname">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Lastname">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Address">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control">
+                                <option value="">- Way to pay -</option>
+                                <option value="1">Cash</option>
+                                <option value="1">Credit card</option>
+                                <option value="1">PayPal</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Message..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div><br/>
+                <div class="row">
+                    <ul class="list-group col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-repeat="c in cart">
+                        <li class="list-group-item">
+                            <span class="row">
+                                <span class="col-xs-12 col-sm-3 col-md-2 col-lg-2" style="padding: 5px;">
+                                    <button class="btn btn-danger" ng-click="removeFromCart(c)"><i class="fa fa-remove"></i></button>
+                                    <img src="admin/images/products/{{c.image_path}}" alt="" style="width: 100px">
+                                      
+                                </span>
+                                <span class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                    {{c.title}}
+                                </span>
+                              
+                            <span class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                                <button class="btn btn-primary btn-sm" ng-click="quantityChange(c, 'minus')"><i class="fa fa-minus"></i></button>
+                                {{ c.quantity }} 
+                                <button class="btn btn-primary btn-sm" ng-click="quantityChange(c, 'plus')"><i class="fa fa-plus"></i></button> 
+                                </span>
+                            <span class="col-xs-3 col-sm-3 col-md-3 col-lg-4 text-right">
+                                    {{c.price}} &euro;
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                    <ul class="list-group col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <li class="list-group-item">
+                            <span class="row">
+                                <span class="col-xs-12 col-sm-9 col-md-9 col-md-8 col-lg-8"></span>
+                            <span class="col-xs-3 col-sm-3 col-md-3 col-lg-4 text-right">
+                                    <b>Total:</b> {{ totalPrice() }} &euro;
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                    <ul class="list-group col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <li class="list-group-item">
+                            <span class="row">
+                                <span class="col-xs-12 col-sm-9 col-md-9 col-md-8 col-lg-8"></span>
+                            <span class="col-xs-3 col-sm-3 col-md-3 col-lg-4 text-right">
+                                    <b>Shipping:</b> {{ 0 }} &euro;
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                    <ul class="list-group col-md-12 col-sm-12 col-xs-12 col-lg-12">
+                        <li class="list-group-item">
+                            <span class="row">
+                                <span class="col-xs-12 col-sm-9 col-md-9 col-md-8 col-lg-8"></span>
+                            <span class="col-xs-3 col-sm-3 col-md-3 col-lg-4 text-right">
+                                        <b>For payment:</b> {{ totalPrice() }} &euro;
+                                    </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row text-right">
+                    <div class="col-lg-12"><br/>
+                        <button class="btn btn-success btn-lg"><i class="fa fa-check"></i> Send your order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

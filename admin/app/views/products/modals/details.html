@@ -1,0 +1,52 @@
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="detailModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Details for product: <span class="flag-icon flag-icon-se"></span> {{product.title}} / <span class="flag-icon flag-icon-gb"></span> {{product.title_en}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" ng-if="product.images.length > 0">
+                        <img src="images/products/{{currentimage}}" alt='blog' style='height:400px;max-width:100%;border:1px solid #d3d3d3;' />
+                    </div>
+                    <div id="imageshow" class="modal">
+                        <span class="close" data-dismiss="modal">&times;</span>
+                        <img class="modal-content" src="{{baseimages + oneb.ImagePath}}" alt="">
+                        <div id="caption"></div>
+                    </div>
+                    <div ng-repeat='i in product.images' s>
+                        <div style="background:url('images/products/{{i.image_path}}') center center no-repeat;background-size:cover;width:100px;height:100px;float:left;margin:10px;cursor:pointer" ng-class="{'img-detail': i.image_path === currentimage}" ng-click='slider(i.image_path)'>
+
+                        </div>
+                    </div>
+                </div><br/>
+                <p><b>Product ID:</b> {{ product.id }}</p>
+                <p><b>Price:</b> <span ng-class="{'price-discount':product.price_discount == 1}">{{product.price | number:2 }} &euro;</span>
+                    <span ng-if="product.price_discount == 1">({{product.price_new | number:2 }} &euro;)</span></p>
+                <p><b>Brand:</b> {{ product.brand.name }}</p>
+                <p><b>Gender:</b>
+                    <span ng-if="product.gender == 0" ng-style="{'color':'#00C0EF'}"><i class="fa fa-male" aria-hidden="true"></i> Male</span>
+                    <span ng-if="product.gender == 1"><i class="fa fa-female" ng-style="{'color':'#b2497d'}" aria-hidden="true"></i> Female</span>
+                </p>
+                <p><b>Date inserted:</b> {{ product.insert_date }}</p>
+                <p><b>Date updated:</b> {{ product.update_date }}</p>
+
+                <p><b>Short description</b> <span class="flag-icon flag-icon-se"></span> :<br/>
+                    <span ng-bind-html="product.short_description"></span></p>
+                <p><b>Short description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
+                    <span ng-bind-html="product.short_description_en"></span></p>
+                <p><b>Description</b> <span class="flag-icon flag-icon-se"></span> :<br/>
+                    <span ng-bind-html="product.description"></span></p>
+                <p><b>Description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
+                    <span ng-bind-html="product.description_en"></span>
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

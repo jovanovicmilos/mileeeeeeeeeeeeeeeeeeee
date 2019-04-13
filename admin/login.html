@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="login">
+<head>
+  <meta charset="utf-8">
+  <title>Log in</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body ng-controller="loginController">
+  <div style="background:#000;color:white;position: fixed;top:50%;left:50%;transform:translate(-50%, -50%);padding:30px;">
+    <form ng-submit="login()">
+      <div class="form-group">
+        <input type="email" name="email" ng-model="user.email" class="form-control" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" ng-model="user.password" class="form-control" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-danger btn-block btn-flat">Sign In</button>
+    </form>
+  </div>
+<!--ANGULAR -->
+<script src="assets/js/bower_components/angular/angular.min.js"></script>
+<script src="assets/js/bower_components/angular-route/angular-route.min.js"></script>
+
+<script src="app/login.js"></script>
+<script src="app/controllers/login.controller.js"></script>
+</body>
+</html>

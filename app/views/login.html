@@ -1,0 +1,19 @@
+<div class="container" id="login" ng-controller="loginController">
+    <div class="login-form">
+        <h3>Login</h3>
+        <form ng-submit="login()">
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" name="email" ng-model="user.email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" name="password" ng-model="user.password" class="form-control" placeholder="Password">
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox"> Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>

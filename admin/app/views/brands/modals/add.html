@@ -1,0 +1,37 @@
+<div class="modal modal-default fade" data-keyboard="false" data-backdrop="static" id="addEditModal" ng-controller='brandsController'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">
+                    <span ng-show='editmode'>Edit brand</span>
+                    <span ng-hide='editmode'>Add brand</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal file-upload col-md-12" name="addeditbrand">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="title"><span class="flag-icon flag-icon-se"></span> Title:</label><br/>
+                                <input type="text" name="title" class="form-control" placeholder="Title" ng-model="brand.name" autofocus ng-class="{'requierd': addeditbrand.title.$invalid}" required />
+                            </div>
+                        </div>
+                    </div>
+                    <label>Logo image: </label>
+                    <small class="text-warning" ng-show="myFile == null" ng-if='!editmode'>* You have to select image!</small>
+                    <input id="imgUpload" name='blogimage' type="file" file-model="myFile" accept="image/*" ng-model="blog.file" onchange="angular.element(this).scope().uploadedFile(this)" />
+                    <p>Image size need to be lower than 2mb</p>
+                    <img id="imgSrc" src="{{image_source}}" style="width:100px;">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button ng-disabled="addeditbrand.$invalid" class="btn btn-success" ng-click="addBrand(brand)" ng-hide="editmode"><i class='fa fa-check'></i> Add</button>
+                <button ng-disabled="addeditbrand.$invalid" class="btn btn-success" ng-click="editBrand(brand)" ng-show="editmode">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
