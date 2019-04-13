@@ -124,7 +124,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             post.append('files[]', file);
         });
 
-        $scope.product.price_discount ? $scope.product.price_discount = 0 : $scope.product.price_discount = 1;
+        $scope.product.price_discount ? $scope.product.price_discount = 1 : $scope.product.price_discount = 0;
         $scope.product.features = $scope.selectedfeature;
         $scope.product.sizes = $scope.selectedsize;
         console.log($scope.product);
