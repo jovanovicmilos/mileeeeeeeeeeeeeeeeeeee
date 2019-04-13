@@ -80,9 +80,31 @@ class Product extends REST_Controller {
 
             $this->db->insert('product_size', $productSizeData);
         }
+
+        $target_dir = "./application/uploads/images/products/";
+        if(isset($_FILES['files']['name'])){
+            $countfiles = count($_FILES['files']['name']);
+            $filename_arr = array(); 
+            for ($i = 0; $i < $countfiles; $i++) 
+            {
+                $time = time() + $i;
+                $filename = md5($time) . "-" . basename($_FILES['files']['name'][$i]);
+                move_uploaded_file($_FILES['files']['tmp_name'][$i], $target_dir.$filename);
+                $num = $i + 1;
+                $imageData = [
+                    'product_id' => $this->db->insert_id(),
+                    'image_path' => $filename,
+                    'priority' => $num
+                ];
+    
+                $this->db->insert('product_image', $imageData); 
+                $filename_arr[] = $filename;
+            }
+
+            $arr = array('name' => $filename_arr);
+        }
         
-        // return "milos";
-        $this->set_response($data1, REST_Controller::HTTP_CREATED);
+        $this->set_response($params, REST_Controller::HTTP_CREATED);
     }
 
     //update new Product

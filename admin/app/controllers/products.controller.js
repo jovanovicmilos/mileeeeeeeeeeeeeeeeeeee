@@ -1,3 +1,19 @@
+function Product() {
+    this.age = null;
+    this.brand_id = null;
+    this.description = '';
+    this.description_en = '';
+    this.features = [];
+    this.gender = null;
+    this.item_information = '';
+    this.item_information_en = '';
+    this.price = null;
+    this.price_discount = false;
+    this.price_new = 0;
+    this.sizes = [];
+    this.title = '';
+    this.title_en = '';
+}
 app.controller('productsController', ['$scope', '$http', 'productsService', 'multpipleSelectService', '$rootScope', '$sce', '$location', function ($scope, $http, productsService, multpipleSelectService, $rootScope, $sce, $location) {
 
     $scope.maxSize = 30;
@@ -33,12 +49,8 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         }
     }
 
-    $scope.product = {
-        title: "",
-        title_en: "",
-        price_discount: false
-    };
-
+    $scope.product = new Product();
+    console.log($scope.product);
     $scope.filterProducts = function () {
         var request = {
             method: "POST",
@@ -97,30 +109,22 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
 
     $scope.editmode = false;
     $scope.addProductModal = function () {
-        $scope.product = {
-            title: "",
-            title_en: "",
-            price_discount: false,
-            sizes: []
-
-        };
+        $scope.product = new Product();
         $scope.selectedsize = [];
         $scope.editmode = false;
         $("#addEditModal").modal("show");
     }
-
+    $scope.dblclick = false;
     $scope.addProduct = function (post) {
+        $scope.dblclick = true;
         var post = new FormData();
         var file = $scope.myFile;
         post.append('file', file);
         angular.forEach($scope.uploadfiles, function (file) {
             post.append('files[]', file);
         });
-        if ($scope.product.price_discount == false) {
-            $scope.product.price_discount = 0;
-        } else {
-            $scope.product.price_discount = 1;
-        }
+
+        $scope.product.price_discount ? $scope.product.price_discount = 0 : $scope.product.price_discount = 1;
         $scope.product.features = $scope.selectedfeature;
         $scope.product.sizes = $scope.selectedsize;
         console.log($scope.product);
@@ -142,9 +146,10 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             $scope.uploadfiles = [];
             $("#addEditModal").modal("hide");
             $scope.filterProducts();
+            $scope.dblclick = false;
         }, function (response) {
             console.log(response);
-            console.log(JSON.parse(response))
+            $scope.dblclick = false;
         })
     }
 
