@@ -34,13 +34,13 @@
                 <p><b>Date updated:</b> {{ product.update_date }}</p>
 
                 <p><b>Short description</b> <span class="flag-icon flag-icon-se"></span> :<br/>
-                    <span ng-bind-html="product.short_description"></span></p>
-                <p><b>Short description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
-                    <span ng-bind-html="product.short_description_en"></span></p>
-                <p><b>Description</b> <span class="flag-icon flag-icon-se"></span> :<br/>
                     <span ng-bind-html="product.description"></span></p>
+                <p><b>Short description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
+                    <span ng-bind-html="product.description_en"></span></p>
+                <p><b>Description</b> <span class="flag-icon flag-icon-se"></span> :<br/>
+                    <span ng-bind-html="product.item_information"></span></p>
                 <p><b>Description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
-                    <span ng-bind-html="product.description_en"></span>
+                    <span ng-bind-html="product.item_information_en"></span>
                 </p>
 
             </div>

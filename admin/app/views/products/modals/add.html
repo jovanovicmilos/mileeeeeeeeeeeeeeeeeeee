@@ -19,7 +19,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <label for="title_en"><span class="flag-icon flag-icon-gb"></span> Title: </label>
-                                <input type="text" name="title_en" class="form-control" placeholder="Title en" ng-model="product.title_en" autofocus ng-required="true" ng-class="{'requierd': addeditproduct.title_en.$invalid}" />
+                                <input type="text" name="title_en" class="form-control" placeholder="Title en" ng-model="product.title_en" ng-required="true" ng-class="{'requierd': addeditproduct.title_en.$invalid}" />
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="price">Price:</label>
-                                <input type="text" name="price" class="form-control mediumInput" placeholder="Price &euro;" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="product.price" autofocus ng-required="true" ng-class="{'requierd': addeditproduct.price.$invalid}" />
+                                <input type="number" name="price" class="form-control mediumInput" placeholder="Price &euro;" ng-model="product.price" ng-required="true" ng-class="{'requierd': addeditproduct.price.$invalid}" />
                                 <label class="containercheckbox"> Price discount
 								  <input type="checkbox" ng-model="product.price_discount">
 								  <span class="checkmark"></span>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-xs-2" ng-hide="product.price_discount == false || product.price_discount == '0'">
                                 <label for="price" ng-style="{'color': '#ffb2b2'}">Price new:</label>
-                                <input type="text" name="price_new" class="form-control bg-danger" placeholder="Price new &euro;" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="product.price_new" autofocus  ng-class="{'requierd': addeditproduct.price_new.$invalid}" ng-style="{'background': '#ffb2b2'}" />
+                                <input type="number" name="price_new" class="form-control bg-danger" placeholder="Price new &euro;" ng-model="product.price_new"  ng-class="{'requierd': addeditproduct.price_new.$invalid}" ng-style="{'background': '#ffb2b2'}" />
                             </div>
                             <div class="col-xs-2">
                                 <label for="Author">Gender: </label>
@@ -64,23 +64,23 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Author"><span class="flag-icon flag-icon-se"></span> Short description:</label><br/>
-                                <textarea type="text" name="short_description" class="form-control textarea" placeholder="Write a short description" ng-model="product.short_description" ng-required='true' ng-class="{'requierd': addeditproduct.short_description.$invalid}" rows="4"></textarea>
+                                <textarea type="text" name="description" class="form-control textarea" placeholder="Write a short description" ng-model="product.description" ng-required='true' ng-class="{'requierd': addeditproduct.short_description.$invalid}" rows="4"></textarea>
                             </div>
                             <div class="col-md-6">
                                 <label for="Author"><span class="flag-icon flag-icon-gb"></span> Short description:</label><br/>
-                                <textarea type="text" name="short_description_en" class="form-control textarea" placeholder="Write a short description en" ng-model="product.short_description_en" ng-required='true' ng-class="{'requierd': addeditproduct.short_description_en.$invalid}" rows="4"></textarea>
+                                <textarea type="text" name="description_en" class="form-control textarea" placeholder="Write a short description en" ng-model="product.description_en" ng-required='true' ng-class="{'requierd': addeditproduct.short_description_en.$invalid}" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-se"></span> Description:</label><br/>
-                                <textarea ui-tinymce="tinymceOptions" type="text" name="blog_post" class="form-control textarea" placeholder="Write a desc" ng-model="product.description" ng-required='true' style="height:200px;"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-se"></span> item_information:</label><br/>
+                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information" class="form-control textarea" placeholder="Write a desc" ng-model="product.item_information" ng-required='true' style="height:200px;"></textarea>
                             </div>
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-gb"></span> Description:</label><br/>
-                                <textarea ui-tinymce="tinymceOptions" type="text" name="blog_post" class="form-control textarea" placeholder="Write a desc" ng-model="product.description_en" ng-required='true' style="height:200px;"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-gb"></span> item_information:</label><br/>
+                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information_en" class="form-control textarea" placeholder="Write a desc" ng-model="product.item_information_en" ng-required='true' style="height:200px;"></textarea>
                             </div>
                         </div>
                     </div>

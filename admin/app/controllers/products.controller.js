@@ -123,6 +123,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         }
         $scope.product.features = $scope.selectedfeature;
         $scope.product.sizes = $scope.selectedsize;
+        console.log($scope.product);
         post.append('post', JSON.stringify($scope.product));
         var request = {
             method: "POST",
@@ -137,7 +138,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         console.log(request);
         
         $http(request).then(function (response) {
-            console.log(response);
+            console.log('add prod response ', response);
             $scope.uploadfiles = [];
             $("#addEditModal").modal("hide");
             $scope.filterProducts();

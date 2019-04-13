@@ -48,28 +48,28 @@ class Product extends REST_Controller {
     //create new Product
     public function create_post()
     {
-        $params = file_get_contents('php://input');
-
+        $params = json_decode($_POST["post"]);
+        
         $price = floatval($this->post('price'));
         $data = [
             'id' => null,
-            'title' => 'maaa',
-            'title_en' => $this->post('title_en'),
-            'price' => $price,
-            'price_new' => $this->post('price_new'),
-            'price_discount' => $this->post('price_discount') || 0,
-            'description' => $this->post('description'),
-            'description_en' => $this->post('description_en'),
-            'gender' => $this->post('gender'),
-            'item_information' => $this->post('item_information'),
-            'item_information_en' => $this->post('item_information_en'),
+            'title' => $params->title,
+            'title_en' => $params->title_en,
+            'price' => $params->price,
+            'price_new' => $params->price_new,
+            'price_discount' => $params->price_discount,
+            'description' => $params->description,
+            'description_en' => $params->description_en,
+            'gender' => $params->gender,
+            'item_information' => $params->item_information,
+            'item_information_en' => $params->item_information_en,
             'insert_date' => date('Y-m-d H:i:s'),
             'update_date' => date('Y-m-d H:i:s')
         ];
         // Executed insert of new product
         $this->db->insert($this->table, $data);  
         
-        $sizes = $this->post('sizes');
+        $sizes = $params->sizes;
         for($i = 0; $i < sizeof($sizes);$i++)
         {
             $productSizeData = [
@@ -80,8 +80,9 @@ class Product extends REST_Controller {
 
             $this->db->insert('product_size', $productSizeData);
         }
-
-        $this->set_response($params, REST_Controller::HTTP_CREATED);
+        
+        // return "milos";
+        $this->set_response($data1, REST_Controller::HTTP_CREATED);
     }
 
     //update new Product

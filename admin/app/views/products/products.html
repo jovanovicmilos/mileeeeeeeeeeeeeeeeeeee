@@ -204,7 +204,7 @@
                                         <span ng-repeat="s in p.sizes"><b>{{ s.name }}</b>: {{s.quantity}} <span ng-if="p.sizes.length !== ($index + 1)"><br/></span></span>
                                     </td>
 
-                                    <td>{{ p.short_description | limitTo:30}}</td>
+                                    <td>{{ p.description | limitTo:30}}</td>
                                     <td>{{ formatDate(p.insert_date) | date:'dd.MM.yyyy'}}</td>
                                     <td>{{ formatDate(p.update_date) | date:'dd.MM.yyyy'}}</td>
                                     <td></td>

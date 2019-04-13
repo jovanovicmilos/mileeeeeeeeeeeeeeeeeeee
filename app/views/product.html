@@ -47,8 +47,8 @@
                                 <span ng-if="product.gender == 1">Male</span>
                             </li>
                             <li><b>Age:</b> {{ product.age }}</li>
-                            <li><br/><small>{{ product.short_description }}</small></li>
-                            <li><br/><small ng-bind-html="product.description"></small></li>
+                            <li><br/><small>{{ product.description }}</small></li>
+                            <li><br/><small ng-bind-html="product.item_information"></small></li>
                         </ul>
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary" ng-click="addToCart(product, 0)"><i class='fa fa-shopping-cart'></i> Add to cart </button></div>
