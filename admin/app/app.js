@@ -1,4 +1,4 @@
-var app = angular.module('estore', ["ngRoute", "ui.bootstrap", "ui.tinymce", "ngSanitize"]);
+var app = angular.module('estore', ["ngRoute", "ui.bootstrap", "ui.tinymce", "ngSanitize", "dndLists"]);
 baseUrl = 'http://localhost/mileeeeeeeeeeeeeeeeeeee/api/index.php';
 
 app.run(function ($rootScope, $http, $window, $location, sessionService) {

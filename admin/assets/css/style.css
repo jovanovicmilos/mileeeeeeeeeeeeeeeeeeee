@@ -112,3 +112,7 @@ th:last-child{
 .action-buttons div:hover {
     opacity: 0.6;
 }
+
+.sizes {
+    display: flex;
+}

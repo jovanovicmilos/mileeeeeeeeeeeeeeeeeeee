@@ -1,57 +1,74 @@
-<div class="modal modal-default fade" data-keyboard="false" data-backdrop="static" id="addEditModal" ng-controller='productsController'>
+<div class="modal modal-default fade" data-keyboard="false" data-backdrop="static" id="addEditModal"
+    ng-controller='productsController'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span></button>
+                    <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">
                     <span ng-show='editmode'>Edit product</span>
                     <span ng-hide='editmode'>Add product</span>
                 </h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal file-upload col-md-12" name="addeditproduct">
-                    <div class="form-group">
+                <form class="form-horizontal file-upload" name="addeditproduct">
+                    <div >
                         <div class="row">
                             <div class="col-xs-6">
-                                <label for="title"><span class="flag-icon flag-icon-se"></span> Title:</label><br/>
-                                <input type="text" name="title" class="form-control" placeholder="Title" ng-model="product.title" autofocus ng-class="{'requierd': addeditproduct.title.$invalid}" required />
+                                <label for="title"><span class="flag-icon flag-icon-se"></span> Title:</label><br />
+                                <input type="text" name="title" class="form-control" placeholder="Title"
+                                    ng-model="product.title" autofocus
+                                    ng-class="{'requierd': addeditproduct.title.$invalid}" required />
                             </div>
                             <div class="col-xs-6">
                                 <label for="title_en"><span class="flag-icon flag-icon-gb"></span> Title: </label>
-                                <input type="text" name="title_en" class="form-control" placeholder="Title en" ng-model="product.title_en" ng-required="true" ng-class="{'requierd': addeditproduct.title_en.$invalid}" />
+                                <input type="text" name="title_en" class="form-control" placeholder="Title en"
+                                    ng-model="product.title_en" ng-required="true"
+                                    ng-class="{'requierd': addeditproduct.title_en.$invalid}" />
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div >
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="price">Price:</label>
-                                <input type="number" name="price" class="form-control mediumInput" placeholder="Price &euro;" ng-model="product.price" ng-required="true" ng-class="{'requierd': addeditproduct.price.$invalid}" />
+                                <input type="number" name="price" class="form-control mediumInput"
+                                    placeholder="Price &euro;" ng-model="product.price" ng-required="true"
+                                    ng-class="{'requierd': addeditproduct.price.$invalid}" />
                                 <label class="containercheckbox"> Price discount
-								  <input type="checkbox" ng-model="product.price_discount">
-								  <span class="checkmark"></span>
-								</label>
+                                    <input type="checkbox" ng-model="product.price_discount">
+                                    <span class="checkmark"></span>
+                                </label>
                             </div>
-                            <div class="col-xs-2" ng-hide="product.price_discount == false || product.price_discount == '0'">
+                            <div class="col-xs-2"
+                                ng-hide="product.price_discount == false || product.price_discount == '0'">
                                 <label for="price" ng-style="{'color': '#ffb2b2'}">Price new:</label>
-                                <input type="number" name="price_new" class="form-control bg-danger" placeholder="Price new &euro;" ng-model="product.price_new"  ng-class="{'requierd': addeditproduct.price_new.$invalid}" ng-style="{'background': '#ffb2b2'}" />
+                                <input type="number" name="price_new" class="form-control bg-danger"
+                                    placeholder="Price new &euro;" ng-model="product.price_new"
+                                    ng-class="{'requierd': addeditproduct.price_new.$invalid}"
+                                    ng-style="{'background': '#ffb2b2'}" />
                             </div>
                             <div class="col-xs-2">
                                 <label for="Author">Gender: </label>
-                                <select class="form-control" name="gender" ng-model="product.gender" ng-options="+(g.id) as g.name for g in genders " ng-change='getAllMunicipalities(product.settlement_id)' ng-class="{'requierd': addeditproduct.gender.$invalid}" required>
+                                <select class="form-control" name="gender" ng-model="product.gender"
+                                    ng-options="+(g.id) as g.name for g in genders "
+                                    ng-change='getAllMunicipalities(product.settlement_id)'
+                                    ng-class="{'requierd': addeditproduct.gender.$invalid}" required>
                                     <option value="">- Select -</option>
-                               </select>
+                                </select>
                             </div>
                             <div class="col-xs-2">
                                 <label for="Author">Brand:</label>
-                                <select class="form-control" name="brand" ng-model="product.brand_id" ng-options="+(b.id) as b.name for b in brands" ng-class="{'requierd': addeditproduct.brand.$invalid}" required>
+                                <select class="form-control" name="brand" ng-model="product.brand_id"
+                                    ng-options="+(b.id) as b.name for b in brands"
+                                    ng-class="{'requierd': addeditproduct.brand.$invalid}" required>
                                     <option value="">- Select -</option>
-                               </select>
+                                </select>
                             </div>
                             <div class="col-xs-2">
                                 <label for="Author">Age:</label>
-                                <select class="form-control" ng-model="product.age" name="age" ng-class="{'requierd': addeditproduct.age.$invalid}" required>
+                                <select class="form-control" ng-model="product.age" name="age"
+                                    ng-class="{'requierd': addeditproduct.age.$invalid}" required>
                                     <option value="">- Select -</option>
                                     <option value="adult">Adult</option>
                                     <option value="children">Children</option>
@@ -59,85 +76,151 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
+
+                    <div >
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-se"></span> Short description:</label><br/>
-                                <textarea type="text" name="description" class="form-control textarea" placeholder="Write a short description" ng-model="product.description" ng-required='true' ng-class="{'requierd': addeditproduct.short_description.$invalid}" rows="4"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-se"></span> Short
+                                    description:</label><br />
+                                <textarea type="text" name="description" class="form-control textarea"
+                                    placeholder="Write a short description" ng-model="product.description"
+                                    ng-required='true'
+                                    ng-class="{'requierd': addeditproduct.short_description.$invalid}"
+                                    rows="4"></textarea>
                             </div>
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-gb"></span> Short description:</label><br/>
-                                <textarea type="text" name="description_en" class="form-control textarea" placeholder="Write a short description en" ng-model="product.description_en" ng-required='true' ng-class="{'requierd': addeditproduct.short_description_en.$invalid}" rows="4"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-gb"></span> Short
+                                    description:</label><br />
+                                <textarea type="text" name="description_en" class="form-control textarea"
+                                    placeholder="Write a short description en" ng-model="product.description_en"
+                                    ng-required='true'
+                                    ng-class="{'requierd': addeditproduct.short_description_en.$invalid}"
+                                    rows="4"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div >
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-se"></span> item_information:</label><br/>
-                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information" class="form-control textarea" placeholder="Write a desc" ng-model="product.item_information" ng-required='true' style="height:200px;"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-se"></span>
+                                    item_information:</label><br />
+                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information"
+                                    class="form-control textarea" placeholder="Write a desc"
+                                    ng-model="product.item_information" ng-required='true'
+                                    style="height:200px;"></textarea>
                             </div>
                             <div class="col-md-6">
-                                <label for="Author"><span class="flag-icon flag-icon-gb"></span> item_information:</label><br/>
-                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information_en" class="form-control textarea" placeholder="Write a desc" ng-model="product.item_information_en" ng-required='true' style="height:200px;"></textarea>
+                                <label for="Author"><span class="flag-icon flag-icon-gb"></span>
+                                    item_information:</label><br />
+                                <textarea ui-tinymce="tinymceOptions" type="text" name="item_information_en"
+                                    class="form-control textarea" placeholder="Write a desc"
+                                    ng-model="product.item_information_en" ng-required='true'
+                                    style="height:200px;"></textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div >
                         <div class="form-inline">
-                            <div style="padding-bottom:10px;"><label>Sizes and quantity:</label></div>
-                            <div ng-repeat="s in sizes | orderBy: 'id'" class="col-md-4">
-                                <label class="containercheckbox" style="width: 30px;">
-                                     <span>{{s.name}}
-                                      <input type="checkbox" ng-checked="exists(s, selectedsize)" ng-click="toggle(s, selectedsize)">
-                                      <span class="checkmark"></span></span>
+                            <div style="padding-bottom:10px;"><label>Asvailable Sizes:</label></div>
+                            <div class="sizes">
+                                <label ng-repeat="s in sizes | orderBy: 'id'" class="containercheckbox"
+                                    style="width: 50px;">
+                                    <span>{{s.name}}
+                                        <input type="checkbox" ng-checked="exists(s, selectedsize)" ng-click="toggle(s, selectedsize)">
+                                        <span class="checkmark"></span>
+                                    </span>
                                 </label>
-                                <input type="text" class="form-control" ng-model='s.quantity' placeholder="quantity for {{s.name}} size">
+                                <!-- <input type="text" class="form-control" ng-model='s.quantity' placeholder="quantity for {{s.name}} size"> -->
                             </div>
-                            <br/>
+                            <br />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div style="padding-bottom:10px;"><label>Karakteristike:</label></div>
-                        <div ng-repeat="g in featuresgroups | orderBy: 'group_id'">
-                            <p>{{ g.name }}</p>
-                            <hr/>
-                            <span ng-repeat='f in g.features'>
-								<label class="containercheckbox" >
-									 <span>{{f.name}}
-									  <input type="checkbox" ng-checked="exists(f.id, selectedfeature)" ng-click="toggle(f.id, selectedfeature)">
-									  <span class="checkmark"></span></span>
-                            </label>
+                    <div >
+                        <label class="containercheckbox">
+                             <span> DELETE COVER IMAGE
+                              <input type="checkbox" ng-model='product.deleteCoverImage'>
+                              <span class="checkmark"></span>
                             </span>
+                        </label><br/>
+                        <label>COVER IMAGE</label>
+                        <input id="imgUpload" name='coverimage' type="file" file-model="coverImage" accept="image/*" onchange="angular.element(this).scope().uploadCoverImage(this)" />
+                        <p>Image must be smaller than 2mb</p>
+                        <img id="imgSrc" src="{{image_source}}" style="width:100px;">
+                    </div><br/>
+                    <div >
+                        <label for="Author">SLIDER IMAGES:</label>
+                    </div>
+                    <input 
+                        type='file'
+                        id="file-input"
+                        onchange="angular.element(this).scope().uploadSliderImages(this)" 
+                        multiple
+                        ng-file="uploadfiles"><br />
+                        <div class="advancedDemo" style="overflow:hidden">
+                            <div class="dropzone box box-yellow">
+                                <div class="container-element box">
+                                    <ul dnd-list="array" dnd-allowed-types="['item']" dnd-horizontal-list="true" dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}" dnd-dragover="dragoverCallback(index, external, type)" dnd-drop="dropCallback(index, item, external, type)" dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist" style="background: transparent;border:0;margin:0;padding:0;display:flex">
+                                        <li ng-repeat="item in array" dnd-draggable="item" dnd-type="'item'" dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="array.splice($index, 1)" style="background: transparent;border:0;width:105px;height:95px;position:relative">
+                                            <img src="{{ item.image_path }}" class="alert-success" alt="" style="width:100px;height:90px;" />
+                                            <input type="text" ng-model="item.color" class="container-element__input"/>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <br/>
-                    </div>
-                    <div class="form-group">
-                        <label for="Author">Images for gallery:</label>
-                    </div>
-                    <input type='file' id="file-input" onchange="angular.element(this).scope().uploadedMultipleFile(this)" multiple ng-file="uploadfiles"><br/>
-                    <div class="form-group">
+                        <div>
+                            <label for="Author">MAIN IMAGES:</label>
+                        </div>
+                        <input 
+                        type='file'
+                        id="file-input"
+                        onchange="angular.element(this).scope().uploadMainImages(this)" multiple
+                        ng-file="uploadfiles"><br />
+                        <div class="advancedDemo" style="overflow:hidden">
+                            <div class="dropzone box box-yellow">
+                                <div class="container-element box">
+                                    <ul dnd-list="arrayMain" dnd-allowed-types="['item']" dnd-horizontal-list="true" dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}" dnd-dragover="dragoverCallback(index, external, type)" dnd-drop="dropCallback(index, item, external, type)" dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist" style="background: transparent;border:0;margin:0;padding:0;display:flex">
+                                        <li ng-repeat="item in arrayMain" dnd-draggable="item" dnd-type="'item'" dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="arrayMain.splice($index, 1)" style="background: transparent;border:0;width:105px;height:95px;position:relative">
+                                            <img src="{{ item.image_path }}" class="alert-success" alt="" style="width:100px;height:90px;" />
+                                            <input type="text" ng-model="item.color" class="container-element__input"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                   
+                    <!-- <div >
                         <div ng-repeat='a in array'>
-                            <img src="{{a}}" alt="" style="padding:10px;width:150px;float:left;border:1px solid #d3d3d3" />
+                            <img src="{{a}}" alt=""
+                                style="padding:10px;width:150px;float:left;border:1px solid #d3d3d3" />
                         </div>
                     </div>
-                    <div class="form-group" ng-show='editmode'>
+                    <div  ng-show='editmode'>
                         <p>You have to select image/s to delete them!</p>
                         <div ng-repeat='a in arrayimage' style="width:100%;display:block">
                             <div class="imagefordelete">
-                                <input type="checkbox" ng-checked="exists(a, selected)" ng-click="toggle(a, selected)" style="position:absolute;top:10px;left:10px;">
-                                <input type="text" ng-model='a.priority' style="position:absolute;top:65px;left:10px;width:30px;font-weight:bold">
-                                <i class="fa fa-trash" ng-show="selected.indexOf(a) !== -1" style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
-                                <img src="images/products/{{a.image_path}}" ng-class="{'ischeckclass': selected.indexOf(a) !== -1}" ng-checked="exists(a, selected)" ng-click="toggle(a, selected)" class="alert-success" alt="" style="height:100%;border: 1px solid #d3d3d3" />
+                                <input type="checkbox" ng-checked="exists(a, selected)" ng-click="toggle(a, selected)"
+                                    style="position:absolute;top:10px;left:10px;">
+                                <input type="text" ng-model='a.priority'
+                                    style="position:absolute;top:65px;left:10px;width:30px;font-weight:bold">
+                                <i class="fa fa-trash" ng-show="selected.indexOf(a) !== -1"
+                                    style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
+                                <img src="images/products/{{a.image_path}}"
+                                    ng-class="{'ischeckclass': selected.indexOf(a) !== -1}"
+                                    ng-checked="exists(a, selected)" ng-click="toggle(a, selected)"
+                                    class="alert-success" alt="" style="height:100%;border: 1px solid #d3d3d3" />
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </form>
             </div>
             <div class="modal-footer">
-                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success" ng-click="addProduct(product)" ng-hide="editmode"><i class='fa fa-check'></i> Add</button>
-                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success" ng-click="editProduct(product)" ng-show="editmode">Save</button>
+                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
+                    ng-click="addProduct(product)" ng-hide="editmode"><i class='fa fa-check'></i> Add</button>
+                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
+                    ng-click="editProduct(product)" ng-show="editmode">Save</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

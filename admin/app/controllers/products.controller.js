@@ -13,6 +13,7 @@ function Product() {
     this.sizes = [];
     this.title = '';
     this.title_en = '';
+    this.deleteCoverImage = false;
 }
 app.controller('productsController', ['$scope', '$http', 'productsService', 'multpipleSelectService', '$rootScope', '$sce', '$location', function ($scope, $http, productsService, multpipleSelectService, $rootScope, $sce, $location) {
 
@@ -20,6 +21,12 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     $scope.currentPage = 1;
     $scope.checkAll = false;
     $scope.queryParams = $location.search();
+    $scope.array = [];
+    $scope.arrayimage = [];
+    $scope.files = [];
+    $scope.arrayMain = [];
+    $scope.arrayimageMain = [];
+    $scope.filesMain = [];
 
     $scope.filter = {
         page: 1,
@@ -109,19 +116,35 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
 
     $scope.editmode = false;
     $scope.addProductModal = function () {
+        $scope.array = [];
+        $scope.arrayimage = [];
         $scope.product = new Product();
         $scope.selectedsize = [];
         $scope.editmode = false;
+        angular.forEach(
+            angular.element("input[type='file']"),
+            function (inputElem) {
+                angular.element(inputElem).val(null);
+            });
+        $scope.image_source = "";
         $("#addEditModal").modal("show");
     }
     $scope.dblclick = false;
     $scope.addProduct = function (post) {
         $scope.dblclick = true;
         var post = new FormData();
-        var file = $scope.myFile;
-        post.append('file', file);
-        angular.forEach($scope.uploadfiles, function (file) {
-            post.append('files[]', file);
+        console.log($scope.filesMain);
+        var file = $scope.coverImage;
+        post.append('file', file, 'cover');
+
+        console.log($scope.files);
+        angular.forEach($scope.files, function (file, index) {
+            post.append('files[]', file, file.priority);
+        });
+        
+        angular.forEach($scope.filesMain, function (file, index) {
+            console.log(file);
+            post.append('filesMainImages[]', file, file.color);
         });
 
         $scope.product.price_discount ? $scope.product.price_discount = 1 : $scope.product.price_discount = 0;
@@ -218,7 +241,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     }
     $scope.editProduct = function (post) {
         var post = new FormData();
-        var file = $scope.myFile;
+        var file = $scope.coverImage;
         post.append('file', file);
         angular.forEach($scope.uploadfiles, function (file) {
             post.append('files[]', file);
@@ -444,27 +467,93 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         }
     };
 
-    $scope.uploadedMultipleFile = function (element) {
-        console.log($scope.editmode)
-        $scope.array = [];
-        console.log(element.files);
-        console.log('hiii');
-        console.log(event.target.result);
-        for (var i = 0; i < element.files.length; i++) {
-            $scope.currentFiles = element.files[i];
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                $scope.array.push(event.target.result);
+    $scope.uploadCoverImage = function (element) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            $scope.image_source = event.target.result
+            $scope.$apply(($scope) => $scope.coverImage = element.files[0]);
+        }
+        reader.readAsDataURL(element.files[0]);
+    }
 
-                $scope.$apply(function ($scope) {
-                    console.log(element.files)
-                    $scope.files = element.files;
-                });
-                console.log($scope.array);
+    $scope.uploadSliderImages = function (element) {
+        $scope.array = [];
+
+        $scope.model[0][0].items = [];
+        for (var i = 0; i < element.files.length; i++) {
+
+            $scope.files = [];
+            $scope.files = [].slice.call(element.files);
+            console.log($scope.files);
+
+            var reader = new FileReader();
+            reader.name = element.files[i].name;
+            reader.onload = function (event) {
+                $scope.obj = {};
+                $scope.obj.image_path = event.target.result;
+                $scope.obj.image_name = event.target.name;
+                
+                $scope.obj.effectAllowed = "all";
+
+                $scope.model[0][0].items.push($scope.obj);
+                $scope.array.push($scope.obj);
+
+                $scope.uploadfiles = [];
+                console.log(Array.from(element.files))
+                for (var i = 0; i < Array.from(element.files).length - 1; i++) {
+                    $scope.array[i].priority = i;
+                    element.files[i].priority = i;
+                }
+
+                $scope.array.push(event.target.result);
+                $scope.array.pop();
+                $scope.$apply(($scope) => {});
             }
             reader.readAsDataURL(element.files[i]);
         }
     }
+
+
+    $scope.uploadMainImages = function (element) {
+        console.log(element)
+        $scope.arrayMain = [];
+
+        $scope.model[0][0].items = [];
+        for (var i = 0; i < element.files.length; i++) {
+
+            $scope.filesMain = [];
+            $scope.filesMain = [].slice.call(element.files);
+            console.log($scope.filesMain);
+
+            var reader = new FileReader();
+            reader.name = element.files[i].name;
+            reader.onload = function (event) {
+                $scope.obj = {};
+                $scope.obj.image_path = event.target.result;
+                $scope.obj.image_name = event.target.name;
+                $scope.obj.color = null;
+                
+                $scope.obj.effectAllowed = "all";
+
+                $scope.model[0][0].items.push($scope.obj);
+                $scope.arrayMain.push($scope.obj);
+
+                $scope.uploadfiles = [];
+                console.log(Array.from(element.files))
+                for (var i = 0; i < Array.from(element.files).length - 1; i++) {
+                    $scope.arrayMain[i].priority = i;
+                    element.files[i].priority = i;
+                    element.files[i].color = 1;
+                }
+
+                $scope.arrayMain.push(event.target.result);
+                $scope.arrayMain.pop();
+                $scope.$apply(($scope) => {});
+            }
+            reader.readAsDataURL(element.files[i]);
+        }
+    }
+
 
     $scope.today = function () {
         $scope.filter.update_date = new Date();
@@ -557,8 +646,116 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
 
         return '';
     }
+
+    //DRAG AND DROP
+    $scope.dragoverCallback = function (index, external, type, callback) {
+        return index < 10; // Disallow dropping in the third row.
+    };
+
+    $scope.dropCallback = function (index, item, external, type) {
+        return item;
+    };
+
+    $scope.logEvent = function (message) {
+
+    };
+
+    $scope.logListEvent = function (action, index, external, type) {
+        var message = external ? 'External ' : '';
+        message += type + ' element was ' + action + ' position ' + index;
+
+    };
+    // Initialize model
+    $scope.model = [[]];
+    var id = 10;
+    angular.forEach(['all'], function (effect, i) {
+        var container = {
+            items: [],
+            effectAllowed: effect
+        };
+        for (var k = 0; k < 7; ++k) {
+            container.items.push({
+                label: effect + ' ' + id++,
+                effectAllowed: effect
+            });
+        }
+        $scope.model[i % $scope.model.length].push(container);
+    });
+
+    $scope.$watch('array', function (model) {
     
-    
+        for (var i = 0; i < model.length; i++) {
+            model[i].priority = i + $scope.arrayimage.length + 1;
+        }
+
+        var convArr = Array.from($scope.files);
+        $scope.files = convArr;
+        $scope.files.sort(function (a, b) {
+            return a.priority - b.priority;
+        })
+
+
+        for (var j = 0; j < $scope.files.length; j++) {
+
+            model.forEach(function (f) {
+                if (f.image_name == $scope.files[j].name) {
+                    $scope.files[j].priority = f.priority;
+                    $scope.files[j].name = f.image_name;
+                }
+            })
+
+        }
+        console.log($scope.files);
+        $scope.modelAsJson = angular.toJson(model, true);
+    }, true);
+
+    $scope.$watch('arrayMain', function (model) {
+        console.log(model);
+        for (var i = 0; i < model.length; i++) {
+            model[i].priority = i + $scope.arrayimage.length + 1;
+        }
+
+        var convArr = Array.from($scope.filesMain);
+        $scope.filesMain = convArr;
+        $scope.filesMain.sort(function (a, b) {
+            return a.priority - b.priority;
+        })
+
+
+        for (var j = 0; j < $scope.filesMain.length; j++) {
+
+            model.forEach(function (f) {
+                if (f.image_name == $scope.filesMain[j].name) {
+                    $scope.filesMain[j].priority = f.priority;
+                    $scope.filesMain[j].color = f.color;
+                    $scope.filesMain[j].name = f.image_name;
+                }
+            })
+        }
+        console.log($scope.filesMain);
+        $scope.modelAsJson = angular.toJson(model, true);
+    }, true);
+
+    $scope.$watch('arrayimage', function (model) {
+        console.log(model)
+        console.log('changed')
+        if (model != undefined) {
+            for (var i = 0; i < model.length; i++) {
+                model[i].priority = i + 1;
+            }
+        }
+
+    }, true);
+
+    $scope.$watch('arrayimageMain', function (model) {
+        console.log(model)
+        if (model != undefined) {
+            for (var i = 0; i < model.length; i++) {
+                model[i].priority = i + 1;
+            }
+        }
+
+    }, true);
 
 }])
 

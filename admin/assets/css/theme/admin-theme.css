@@ -1675,7 +1675,6 @@ a:focus {
   position: relative;
   border-radius: 3px;
   background: #ffffff;
-  border-top: 3px solid #d2d6de;
   margin-bottom: 20px;
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -3489,7 +3488,6 @@ table.text-center th {
   margin: 0 auto;
   width: 100px;
   padding: 3px;
-  border: 3px solid #d2d6de;
 }
 .profile-username {
   font-size: 21px;
@@ -5013,7 +5011,6 @@ table.text-center th {
   margin-left: 110px;
 }
 .img-bordered {
-  border: 3px solid #d2d6de;
   padding: 3px;
 }
 .img-bordered-sm {
