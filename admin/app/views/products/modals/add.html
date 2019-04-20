@@ -11,8 +11,14 @@
                 </h4>
             </div>
             <div class="modal-body">
+                <input 
+                colorpicker 
+                colorpicker-with-input="true"
+                id="colorpicker-input"
+                ng-model="product.color"
+                    />
                 <form class="form-horizontal file-upload" name="addeditproduct">
-                    <div >
+                    <div>
                         <div class="row">
                             <div class="col-xs-6">
                                 <label for="title"><span class="flag-icon flag-icon-se"></span> Title:</label><br />
@@ -28,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <div >
+                    <div>
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="price">Price:</label>
@@ -77,7 +83,7 @@
                         </div>
                     </div>
 
-                    <div >
+                    <div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Author"><span class="flag-icon flag-icon-se"></span> Short
@@ -99,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <div >
+                    <div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="Author"><span class="flag-icon flag-icon-se"></span>
@@ -119,14 +125,15 @@
                             </div>
                         </div>
                     </div>
-                    <div >
+                    <div>
                         <div class="form-inline">
                             <div style="padding-bottom:10px;"><label>Asvailable Sizes:</label></div>
                             <div class="sizes">
                                 <label ng-repeat="s in sizes | orderBy: 'id'" class="containercheckbox"
                                     style="width: 50px;">
-                                    <span>{{s.name}}
-                                        <input type="checkbox" ng-checked="exists(s, selectedsize)" ng-click="toggle(s, selectedsize)">
+                                    <span>{{s.size}}
+                                        <input type="checkbox" ng-checked="exists(s, selectedsize)"
+                                            ng-click="toggle(s, selectedsize)">
                                         <span class="checkmark"></span>
                                     </span>
                                 </label>
@@ -135,95 +142,205 @@
                             <br />
                         </div>
                     </div>
-                    <div >
-                        <label class="containercheckbox">
-                             <span> DELETE COVER IMAGE
-                              <input type="checkbox" ng-model='product.deleteCoverImage'>
-                              <span class="checkmark"></span>
-                            </span>
-                        </label><br/>
-                        <label>COVER IMAGE</label>
-                        <input id="imgUpload" name='coverimage' type="file" file-model="coverImage" accept="image/*" onchange="angular.element(this).scope().uploadCoverImage(this)" />
-                        <p>Image must be smaller than 2mb</p>
-                        <img id="imgSrc" src="{{image_source}}" style="width:100px;">
-                    </div><br/>
-                    <div >
-                        <label for="Author">SLIDER IMAGES:</label>
-                    </div>
-                    <input 
-                        type='file'
-                        id="file-input"
-                        onchange="angular.element(this).scope().uploadSliderImages(this)" 
-                        multiple
-                        ng-file="uploadfiles"><br />
-                        <div class="advancedDemo" style="overflow:hidden">
-                            <div class="dropzone box box-yellow">
-                                <div class="container-element box">
-                                    <ul dnd-list="array" dnd-allowed-types="['item']" dnd-horizontal-list="true" dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}" dnd-dragover="dragoverCallback(index, external, type)" dnd-drop="dropCallback(index, item, external, type)" dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist" style="background: transparent;border:0;margin:0;padding:0;display:flex">
-                                        <li ng-repeat="item in array" dnd-draggable="item" dnd-type="'item'" dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="array.splice($index, 1)" style="background: transparent;border:0;width:105px;height:95px;position:relative">
-                                            <img src="{{ item.image_path }}" class="alert-success" alt="" style="width:100px;height:90px;" />
-                                            <input type="text" ng-model="item.color" class="container-element__input"/>
 
-                                        </li>
-                                    </ul>
-                                </div>
+                    <label class="containercheckbox">
+                        <span> DELETE COVER IMAGE
+                            <input type="checkbox" ng-model='product.deleteCoverImage'>
+                            <span class="checkmark"></span>
+                        </span>
+                    </label><br />
+                    <label>COVER IMAGE</label>
+                    <input id="imgUpload" name='coverimage' type="file" file-model="coverImage" accept="image/*"
+                        onchange="angular.element(this).scope().uploadCoverImage(this)" />
+                    <p>Image must be smaller than 2mb</p>
+                    <img id="imgSrc" src="{{image_source}}" style="width:100px;">
+            </div>
+            <div ng-show='editmode'>
+                <p><b>Trenutne slike (selektujte slike koje želite da obrišete)</b></p>
+                <div class="advancedDemo" style="background: transparent;border:0;padding: 0;">
+                    <div style="background: transparent;border:0;padding: 0;">
+                        <div class="dropzone box box-yellow"
+                            style="background: transparent;border:0;height: auto!important">
+
+                            <div class="container-element box"
+                                style="height: auto;background: white;border: 0;padding: 0;margin: 0;">
+                                <ul dnd-list="arrayimage" dnd-allowed-types="['item']" dnd-horizontal-list="true"
+                                    dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}"
+                                    dnd-dragover="dragoverCallback(index, external, type)"
+                                    dnd-drop="dropCallback(index, item, external, type)"
+                                    dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist"
+                                    style="background: transparent;border:0;margin:0;padding:0;">
+                                    <li ng-repeat="item in arrayimage | filter: { position: 'cover'}"
+                                        dnd-draggable="item" dnd-type="'item'"
+                                        dnd-effect-allowed="{{item.effectAllowed}}"
+                                        dnd-moved="arrayimage.splice($index, 1)"
+                                        style="background: transparent;border:0;width:105px;height:95px;color:black">
+                                        <div class="imagefordelete">
+                                            <input type="checkbox" ng-checked="exists(item, selected)"
+                                                ng-click="toggle(item, selected)"
+                                                style="position:absolute;top:10px;left:10px;">
+                                            <i class="fa fa-trash" ng-show="selected.indexOf(item) !== -1"
+                                                style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
+                                            <img src="../api/uploads/images/products/{{item.image_path}}"
+                                                ng-class="{'ischeckclass': selected.indexOf(item) !== -1}"
+                                                ng-checked="exists(item, selected)" ng-click="toggle(item, selected)"
+                                                class="alert-success" alt="" style="width:100px;height:90px;" />
+                                        </div>
+
+                                    </li>
+                                </ul>
                             </div>
-                        </div>
-                        <div>
-                            <label for="Author">MAIN IMAGES:</label>
-                        </div>
-                        <input 
-                        type='file'
-                        id="file-input"
-                        onchange="angular.element(this).scope().uploadMainImages(this)" multiple
-                        ng-file="uploadfiles"><br />
-                        <div class="advancedDemo" style="overflow:hidden">
-                            <div class="dropzone box box-yellow">
-                                <div class="container-element box">
-                                    <ul dnd-list="arrayMain" dnd-allowed-types="['item']" dnd-horizontal-list="true" dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}" dnd-dragover="dragoverCallback(index, external, type)" dnd-drop="dropCallback(index, item, external, type)" dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist" style="background: transparent;border:0;margin:0;padding:0;display:flex">
-                                        <li ng-repeat="item in arrayMain" dnd-draggable="item" dnd-type="'item'" dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="arrayMain.splice($index, 1)" style="background: transparent;border:0;width:105px;height:95px;position:relative">
-                                            <img src="{{ item.image_path }}" class="alert-success" alt="" style="width:100px;height:90px;" />
-                                            <input type="text" ng-model="item.color" class="container-element__input"/>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+
                         </div>
 
-                   
-                    <!-- <div >
-                        <div ng-repeat='a in array'>
-                            <img src="{{a}}" alt=""
-                                style="padding:10px;width:150px;float:left;border:1px solid #d3d3d3" />
-                        </div>
                     </div>
-                    <div  ng-show='editmode'>
-                        <p>You have to select image/s to delete them!</p>
-                        <div ng-repeat='a in arrayimage' style="width:100%;display:block">
-                            <div class="imagefordelete">
-                                <input type="checkbox" ng-checked="exists(a, selected)" ng-click="toggle(a, selected)"
-                                    style="position:absolute;top:10px;left:10px;">
-                                <input type="text" ng-model='a.priority'
-                                    style="position:absolute;top:65px;left:10px;width:30px;font-weight:bold">
-                                <i class="fa fa-trash" ng-show="selected.indexOf(a) !== -1"
-                                    style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
-                                <img src="images/products/{{a.image_path}}"
-                                    ng-class="{'ischeckclass': selected.indexOf(a) !== -1}"
-                                    ng-checked="exists(a, selected)" ng-click="toggle(a, selected)"
-                                    class="alert-success" alt="" style="height:100%;border: 1px solid #d3d3d3" />
+                </div>
+            </div>
+          
+            <div> 
+               
+            <div>
+                <label for="Author">SLIDER IMAGES:</label>
+            </div>
+            <input type='file' id="file-input" onchange="angular.element(this).scope().uploadSliderImages(this)"
+                multiple ng-file="uploadfiles"><br />
+            <div class="advancedDemo" style="overflow:hidden">
+                <div class="dropzone box box-yellow">
+                    <div class="container-element box">
+                        <ul dnd-list="array" dnd-allowed-types="['sliderImage']" dnd-horizontal-list="true"
+                            dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}"
+                            dnd-dragover="dragoverCallback(index, external, type)"
+                            dnd-drop="dropCallback(index, item, external, type)"
+                            dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist"
+                            style="background: transparent;border:0;margin:0;padding:0;display:flex">
+                            <li ng-repeat="item in array" dnd-draggable="item" dnd-type="'sliderImage'"
+                                dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="array.splice($index, 1)"
+                                style="background: transparent;border:0;width:105px;height:95px;position:relative">
+                                <img src="{{ item.image_path }}" class="alert-success" alt=""
+                                    style="width:100px;height:90px;" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-show='editmode'>
+                <p><b>Trenutne slike (selektujte slike koje želite da obrišete)</b></p>
+                <div class="advancedDemo" style="background: transparent;border:0;padding: 0;">
+                    <div style="background: transparent;border:0;padding: 0;">
+                        <div class="dropzone box box-yellow"
+                            style="background: transparent;border:0;height: auto!important">
+
+                            <div class="container-element box"
+                                style="height: auto;background: white;border: 0;padding: 0;margin: 0;">
+                                <ul dnd-list="arrayimage" dnd-allowed-types="['item']" dnd-horizontal-list="true"
+                                    dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}"
+                                    dnd-dragover="dragoverCallback(index, external, type)"
+                                    dnd-drop="dropCallback(index, item, external, type)"
+                                    dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist"
+                                    style="background: transparent;border:0;margin:0;padding:0;">
+                                    <li ng-repeat="item in arrayimage | filter: { position: 'slider'}"
+                                        dnd-draggable="item" dnd-type="'item'"
+                                        dnd-effect-allowed="{{item.effectAllowed}}"
+                                        dnd-moved="arrayimage.splice($index, 1)"
+                                        style="background: transparent;border:0;width:105px;height:95px;color:black">
+                                        <div class="imagefordelete">
+                                            <input type="checkbox" ng-checked="exists(item, selected)"
+                                                ng-click="toggle(item, selected)"
+                                                style="position:absolute;top:10px;left:10px;">
+                                            <i class="fa fa-trash" ng-show="selected.indexOf(item) !== -1"
+                                                style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
+                                            <img src="../api/uploads/images/products/{{item.image_path}}"
+                                                ng-class="{'ischeckclass': selected.indexOf(item) !== -1}"
+                                                ng-checked="exists(item, selected)" ng-click="toggle(item, selected)"
+                                                class="alert-success" alt="" style="width:100px;height:90px;" />
+                                        </div>
+
+                                    </li>
+                                </ul>
                             </div>
+
                         </div>
-                    </div> -->
-                </form>
+
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
-                    ng-click="addProduct(product)" ng-hide="editmode"><i class='fa fa-check'></i> Add</button>
-                <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
-                    ng-click="editProduct(product)" ng-show="editmode">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div>
+                <label for="Author">MAIN IMAGES:</label>
             </div>
+            <input type='file' id="file-input" onchange="angular.element(this).scope().uploadMainImages(this)" multiple
+                ng-file="uploadfilesMain"><br />
+            <div class="advancedDemo" style="overflow:hidden">
+                <div class="dropzone box box-yellow">
+                    <div class="container-element box">
+                        <ul dnd-list="arrayMain" dnd-allowed-types="['item']" dnd-horizontal-list="true"
+                            dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}"
+                            dnd-dragover="dragoverCallback(index, external, type)"
+                            dnd-drop="dropCallback(index, item, external, type)"
+                            dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist"
+                            style="background: transparent;border:0;margin:0;padding:0;display:flex">
+                            <li ng-repeat="item in arrayMain" dnd-draggable="item" dnd-type="'item'"
+                                dnd-effect-allowed="{{item.effectAllowed}}" dnd-moved="arrayMain.splice($index, 1)"
+                                style="background: transparent;border:0;width:105px;height:95px;position:relative">
+                                <img src="{{ item.image_path }}" class="alert-success" alt=""
+                                    style="width:100px;height:90px;" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show='editmode'>
+                <p><b>Trenutne slike (selektujte slike koje želite da obrišete)</b></p>
+                <div class="advancedDemo " style="background: transparent;border:0;padding: 0;">
+                    <div style="background: transparent;border:0;padding: 0;">
+                        <div class="dropzone box box-yellow"
+                            style="background: transparent;border:0;height: auto!important">
+
+                            <div class="container-element box"
+                                style="height: auto;background: white;border: 0;padding: 0;margin: 0;">
+                                <ul dnd-list="arrayimage" dnd-allowed-types="['item']" dnd-horizontal-list="true"
+                                    dnd-external-sources="true" dnd-effect-allowed="{{container.effectAllowed}}"
+                                    dnd-dragover="dragoverCallback(index, external, type)"
+                                    dnd-drop="dropCallback(index, item, external, type)"
+                                    dnd-inserted="logListEvent('inserted at', index, external, type)" class="itemlist"
+                                    style="background: transparent;border:0;margin:0;padding:0;">
+                                    <li ng-repeat="item in arrayimage | filter: { position: 'main'}"
+                                        dnd-draggable="item" dnd-type="'item'"
+                                        dnd-effect-allowed="{{item.effectAllowed}}"
+                                        dnd-moved="arrayimage.splice($index, 1)"
+                                        style="background: transparent;border:0;width:105px;height:95px;color:black">
+                                        <div class="imagefordelete">
+                                            <input type="checkbox" ng-checked="exists(item, selected)"
+                                                ng-click="toggle(item, selected)"
+                                                style="position:absolute;top:10px;left:10px;">
+                                            <i class="fa fa-trash" ng-show="selected.indexOf(item) !== -1"
+                                                style="position:absolute;top:-10px;right:5px;font-size:14px;"></i>
+                                            <img src="../api/uploads/images/products/{{item.image_path}}"
+                                                ng-class="{'ischeckclass': selected.indexOf(item) !== -1}"
+                                                ng-checked="exists(item, selected)" ng-click="toggle(item, selected)"
+                                                class="alert-success" alt="" style="width:100px;height:90px;" />
+                                        </div>
+
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </form>
+            
         </div>
-
+        <div class="modal-footer">
+            <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
+                ng-click="addProduct(product)" ng-hide="editmode"><i class='fa fa-check'></i> Add</button>
+            <button ng-disabled="addeditproduct.$invalid || dblclick" class="btn btn-success"
+                ng-click="editProduct(product)" ng-show="editmode">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
     </div>
+
+</div>
 </div>

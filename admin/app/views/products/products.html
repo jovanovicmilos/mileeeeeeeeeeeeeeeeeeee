@@ -166,7 +166,7 @@
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th> <input type="checkbox" ng-model="checkAll" ng-click="multipleSelect.checkAllOnPage(products.data, 'id', checkAll)" ng-checked="multipleSelect.isAllChecked(products.data, 'id', false)" /></th>
+                                    <th> <input type="checkbox" ng-model="checkAll" ng-click="multipleSelect.checkAllOnPage(products, 'id', checkAll)" ng-checked="multipleSelect.isAllChecked(products, 'id', false)" /></th>
                                     <th>Actions</th>
                                     <th></th>
                                     <th>Title <span class="flag-icon flag-icon-se"></span> ( Title <span class="flag-icon flag-icon-gb"></span> )</th>
@@ -180,9 +180,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="p in products.data">
+                                <tr ng-repeat="p in products">
                                     <td><input type="checkbox" ng-checked="multipleSelect.exist(p.id)" ng-click="multipleSelect.check(p.id)" /></td>
                                     <td class="action-buttons">
+                                        <div ng-click="addProductModal(p)"><i class='fa fa-edit'></i><small> ADD SAME PRODUCT<br/> IN DIFFERENT COLOR</small></div>
                                         <div ng-click="editProductModal(p)"><i class='fa fa-edit'></i><small> EDIT</small></div>
                                         <div ng-click="detailProductModal(p)"><i class='fa fa-search'></i><small> SHOW</small></div>
                                         <div ng-click="deleteProductModal(p)" class="text-danger"><i class='fa fa-trash'></i> <small>DELETE</small></div>

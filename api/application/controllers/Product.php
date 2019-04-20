@@ -29,19 +29,41 @@ class Product extends REST_Controller {
 
         $config['per_page'] = (int) $size;
         $config['current_page'] = (int) $page - 1;
-        $config['total_pages'] = ceil($config['total_rows'] / $config['per_page']);
         $config['total_rows'] = (int) $this->db->count_all($this->table);
+        $config['total_pages'] = ceil($config['total_rows'] / $config['per_page']);
         $config['total_rows_filtered'] = 
-        $this->db->like('name', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table)->num_rows();
+        $this->db->like('title', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table)->num_rows();
         $config['content'] = 
-        $this->db->like('name', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table, $config['per_page'], $config['current_page'] * $config['per_page'])->result();
+        $this->db->like('title', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table, $config['per_page'], $config['current_page'] * $config['per_page'])->result();
 
         $this->response($config, REST_Controller::HTTP_OK);
     }
 
     //get by id
-    public function show_get($id) {
+    public function show_get($id) {       
         $product = $this->db->where('id', $id)->get($this->table)->row();
+        // sizes
+        $sizes = $this->db->query("SELECT size_id FROM product_size WHERE product_id={$id}")->result_array();
+        $product->sizes = array();
+        foreach ($sizes as $s) {
+            $tempsizes = $this->db->where('id', $s["size_id"])->get('sizes')->row();
+            array_push($product->sizes, $tempsizes);
+        }
+
+        // images
+        $images = $this->db->where('product_id', $id)->get('product_image')->result_array();
+        $product->images = array();
+        foreach ($images as $s) {
+            array_push($product->images, $s);
+        }
+
+        // images
+        $related = $this->db->where('parent_id', $id)->get('products')->result_array();
+        $product->related = array();
+        foreach ($related as $s) {
+            array_push($product->related, $s);
+        }
+
         $this->response($product, REST_Controller::HTTP_OK);
     }
 
@@ -53,12 +75,14 @@ class Product extends REST_Controller {
         $price = floatval($this->post('price'));
         $data = [
             'id' => null,
+            'parent_id' => $params->parent_id,
             'title' => $params->title,
             'title_en' => $params->title_en,
             'price' => $params->price,
             'price_new' => $params->price_new,
             'price_discount' => $params->price_discount,
             'description' => $params->description,
+            'color' => $params->color,
             'description_en' => $params->description_en,
             'gender' => $params->gender,
             'item_information' => $params->item_information,
@@ -83,7 +107,7 @@ class Product extends REST_Controller {
         }
 
         // adding of cover image
-        $targetDir = "./application/uploads/images/products/";
+        $targetDir = "./uploads/images/products/";
         $time = time();
         $coverImageFilename = '';
         if(isset($_FILES['file']['name'])) {
@@ -96,7 +120,6 @@ class Product extends REST_Controller {
                 'product_id' => $lastId,
                 'image_path' => $coverImageFilename,
                 'priority' => 0,
-                'color' => '',
                 'position' => 'cover'
             ];
 
@@ -104,150 +127,50 @@ class Product extends REST_Controller {
         }
 
         if(isset($_FILES['files']['name'])) {
+
+            $imageLength = count($_FILES['files']['name']);
         
-            $countfiles = count($_FILES['files']['name']);
-        
-            $filename_arr = array(); 
-            for ($i = 0; $i < $countfiles; $i++) {
+            for ($i = 0; $i < $imageLength; $i++) {
                 $time = time() + $i;
-                $filename1 = md5($time) . "-" . basename($_FILES['files']['name'][$i]) . '.png';
-                //WATERMARK
-                $max_size = 700; //max image size in Pixels
+                $filename = md5($time) . "-" . $i . '.png';
+                $target_file = $targetDir . $filename;
+                $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['files']['tmp_name'][$i], $target_file);
 
-                $image_name = $filename1; //file name
-                $image_size = $_FILES['files']['size'][$i]; //file size
-                $image_temp = $_FILES['files']['tmp_name'][$i]; //file temp
-                $image_type = $_FILES['files']['type'][$i]; //file type
+                $image = [
+                    'product_id' => $lastId,
+                    'image_path' => $filename,
+                    'priority' => $_FILES['files']['name'][$i],
+                    'position' => 'slider'
+                ];
 
-                switch(strtolower($image_type)){ //determine uploaded image type 
-                    //Create new image from file
-                    case 'image/png': 
-                        $image_resource =  imagecreatefrompng($image_temp);
-                        break;
-                    case 'image/gif':
-                        $image_resource =  imagecreatefromgif($image_temp);
-                        break;          
-                    case 'image/jpeg': case 'image/pjpeg':
-                        $image_resource = imagecreatefromjpeg($image_temp);
-                        break;
-                    default:
-                        $image_resource = false;
-                }
-
-                if($image_resource){
-                    //Copy and resize part of an image with resampling
-                    list($img_width, $img_height) = getimagesize($image_temp);
-
-                    //Construct a proportional size of new image
-                    $image_scale        = min($max_size / $img_width, $max_size / $img_height); 
-                    $new_image_width    = ceil($image_scale * $img_width);
-                    $new_image_height   = ceil($image_scale * $img_height);
-                    $new_canvas         = imagecreatetruecolor($new_image_width , $new_image_height);
-
-                    if(imagecopyresampled($new_canvas, $image_resource , 0, 0, 0, 0, $new_image_width, $new_image_height, $img_width, $img_height))
-                    {
-
-                        if(!is_dir($targetDir)) { 
-                            mkdir($targetDir);//create dir if it doesn't exist
-                        }
-
-                    
-                        //output image direcly on the browser.
-                        header('Content-Type: image/jpeg');
-                        imagejpeg($new_canvas, NULL , 90);
-
-                        //Or Save image to the folder
-                        imagejpeg($new_canvas, $targetDir.'/'.$image_name , 90);
-                        
-                        $imageData = [
-                            'product_id' => $lastId,
-                            'image_path' => $filename1,
-                            'priority' => $_FILES['files']['name'][$i],
-                            'color' => null,
-                            'position' => 'slider'
-                        ];
-            
-                        $this->db->insert('product_image', $imageData); 
-
-                        $filename_arr[] = $filename1;
-                    }
-                }
-            }
-        }
-
-        if(isset($_FILES['filesMainImages']['name'])) {
-        
-            $countfiles = count($_FILES['filesMainImages']['name']);
-        
-            $filename_arr = array(); 
-            for ($i = 0; $i < $countfiles; $i++) {
-                $time = time() + $i;
-                $filename1 = md5($time) . "-" . basename($_FILES['filesMainImages']['name'][$i]) . '.png';
-                //WATERMARK
-                $max_size = 700; //max image size in Pixels
-
-                $image_name = $filename1; //file name
-                $image_size = $_FILES['filesMainImages']['size'][$i]; //file size
-                $image_temp = $_FILES['filesMainImages']['tmp_name'][$i]; //file temp
-                $image_type = $_FILES['filesMainImages']['type'][$i]; //file type
-
-                switch(strtolower($image_type)){ //determine uploaded image type 
-                    //Create new image from file
-                    case 'image/png': 
-                        $image_resource =  imagecreatefrompng($image_temp);
-                        break;
-                    case 'image/gif':
-                        $image_resource =  imagecreatefromgif($image_temp);
-                        break;          
-                    case 'image/jpeg': case 'image/pjpeg':
-                        $image_resource = imagecreatefromjpeg($image_temp);
-                        break;
-                    default:
-                        $image_resource = false;
-                }
-
-                if($image_resource){
-                    //Copy and resize part of an image with resampling
-                    list($img_width, $img_height) = getimagesize($image_temp);
-
-                    //Construct a proportional size of new image
-                    $image_scale        = min($max_size / $img_width, $max_size / $img_height); 
-                    $new_image_width    = ceil($image_scale * $img_width);
-                    $new_image_height   = ceil($image_scale * $img_height);
-                    $new_canvas         = imagecreatetruecolor($new_image_width , $new_image_height);
-
-                    if(imagecopyresampled($new_canvas, $image_resource , 0, 0, 0, 0, $new_image_width, $new_image_height, $img_width, $img_height))
-                    {
-
-                        if(!is_dir($targetDir)) { 
-                            mkdir($targetDir);//create dir if it doesn't exist
-                        }
-
-                    
-                        //output image direcly on the browser.
-                        header('Content-Type: image/jpeg');
-                        imagejpeg($new_canvas, NULL , 90);
-
-                        //Or Save image to the folder
-                        imagejpeg($new_canvas, $targetDir.'/'.$image_name , 90);
-                        
-                        $imageData = [
-                            'product_id' => $lastId,
-                            'image_path' => $filename1,
-                            'priority' => 0,
-                            'color' => $_FILES['filesMainImages']['name'][$i],
-                            'position' => 'main'
-                        ];
-            
-                        $this->db->insert('product_image', $imageData); 
-
-                        $filename_arr[] = $filename1;
-                    }
-                }
+                $this->db->insert('product_image', $image); 
             }
         }
         
-        $this->set_response($_FILES['files']['name'][0], REST_Controller::HTTP_CREATED);
+        if(isset($_FILES['files']['name'])) {
+            $imagesLength = count($_FILES['filesMainImages']['name']);
+        
+            for ($i = 0; $i < $imagesLength; $i++) {
+                $time = time() + $i;
+                $filenameMain = md5($time) . "-" . $i . '.png';
+                $target_main_file = $targetDir . $filenameMain;
+                $imageFileType = pathinfo($target_main_file, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['filesMainImages']['tmp_name'][$i], $target_main_file);
+
+                $imageMain = [
+                    'product_id' => $lastId,
+                    'image_path' => $filenameMain,
+                    'priority' => $_FILES['filesMainImages']['name'][$i],
+                    'position' => 'main'
+                ];
+
+                $this->db->insert('product_image', $imageMain); 
+            }
+        }
+
+       
+        $this->set_response(count($_FILES['filesMainImages']['name']), REST_Controller::HTTP_CREATED);
     }
 
     //update new Product
