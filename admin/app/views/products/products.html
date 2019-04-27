@@ -82,13 +82,6 @@
                             <input type="text" class="form-control" ng-model="filter.title" placeholder="Title">
                         </div>
                         <div class="col-xs-2">
-                            <label>Sizes</label>
-                            <select class="form-control" ng-model="filter.size_id" ng-change="filterProducts()">
-                            <option value="">- All sizes -</option>
-                            <option ng-repeat='s in sizes' value="{{s.id}}">{{s.name}}</option>
-                        </select>
-                        </div>
-                        <div class="col-xs-2">
                             <label>Gender</label>
                             <select class="form-control" ng-model="filter.gender" ng-change="filterProducts()">
                             <option value="">- All gender -</option>
@@ -112,35 +105,6 @@
 
                         </div>
                     </div><br/>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>Date updated from</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.update_date" is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close" />
-                                <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                          </span>
-                            </p>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label>Date inserted from</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" uib-datepicker-popup ng-model="filter.insert_date" is-open="popup2.opened" datepicker-options="dateOptions" close-text="Close" />
-                                <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-                          </span>
-                            </p>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="checkbox">
-                                <label><input type="checkbox" ng-model="filter.price_discount" value="">Only with discount price</label>
-                            </div>
-                        </div>
-                        <div class="col-xs-12"><br/>
-                            <button class="btn btn-primary pull-right" type="submit" ng-click="filterProducts()">Search <i class="fa fa-search"></i></button>
-                        </div>
-                    </div>
                 </form>
             </div>
             <!-- /.box-body -->
@@ -162,10 +126,9 @@
                                     <th>Actions</th>
                                     <th></th>
                                     <th>Title <span class="flag-icon flag-icon-se"></span> ( Title <span class="flag-icon flag-icon-gb"></span> )</th>
-                                    <th>Brand</th>
                                     <th>Price (<small class="label bg-green">new</small>) &euro;</th>
-                                    <th>Gender/s</th>
-                                    <th>Size: Quantity</th>
+                                    <th>Gender</th>
+                                    <th>Size</th>
                                     <th>Description</th>
                                     <th>Date added</th>
                                     <th>Date updated</th>
@@ -181,12 +144,11 @@
                                         <div ng-click="deleteProductModal(p)" class="text-danger"><i class='fa fa-trash'></i> <small>DELETE</small></div>
                                     </td>
                                     <td>
-                                        <span ng-repeat='i in p.images'>
-                                        <img src="images/products/{{i.image_path}}" alt="" style="height: 150px">
+                                        <span ng-repeat="i in p.images | filter: {position: 'cover'}">
+                                        <img src="../api/uploads/images/products/{{i.image_path}}" alt="" style="height: 150px">
                                         </span>
                                     </td>
                                     <td><a href="javascript:void(0);" ng-click="editProductModal(p)">{{ p.title }} ({{p.title_en}})</a></td>
-                                    <td>{{ p.brand.name }}</td>
                                     <td><span ng-class="{'price-discount': p.price_discount == 1}">{{ p.price | number:2 }}</span>
                                         <span ng-if="p.price_discount == 1">({{ p.price_new | number:2 }})</span></td>
                                     <td>
@@ -194,7 +156,7 @@
                                         <span ng-if="p.gender == 1"><i class="fa fa-female" ng-style="{'color':'#b2497d'}" aria-hidden="true"></i> Female</span>
                                     </td>
                                     <td>
-                                        <span ng-repeat="s in p.sizes"><b>{{ s.name }}</b>: {{s.quantity}} <span ng-if="p.sizes.length !== ($index + 1)"><br/></span></span>
+                                        <span ng-repeat="s in p.sizes"><b>{{ s.size }}<span ng-show="p.sizes.length - 1 != $index">, </span></b></span>
                                     </td>
 
                                     <td>{{ p.description | limitTo:30}}</td>

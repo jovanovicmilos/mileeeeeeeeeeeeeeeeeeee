@@ -36,6 +36,22 @@ class Product extends REST_Controller {
         $config['content'] = 
         $this->db->like('title', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table, $config['per_page'], $config['current_page'] * $config['per_page'])->result();
 
+        foreach($config['content'] as $i => $product) {
+            $this->db->where('product_id', $product->id);
+            $images_query = $this->db->get('product_image')->result_array();
+            $config['content'][$i]->images = array();
+            $config['content'][$i]->images = $images_query;
+            
+            $this->db->where('product_id', $product->id);
+            $product_sizes_query = $this->db->get('product_size')->result_array();
+            
+            $config['content'][$i]->sizes = array();
+            foreach($product_sizes_query as $size) {
+                $single_size = $this->db->where('id', $size["size_id"])->get('sizes')->row();
+                array_push($config['content'][$i]->sizes, $single_size);
+            }
+         }
+
         $this->response($config, REST_Controller::HTTP_OK);
     }
 

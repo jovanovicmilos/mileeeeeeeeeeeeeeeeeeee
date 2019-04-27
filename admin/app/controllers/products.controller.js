@@ -175,26 +175,33 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         })
     }
 
+    const getOneProduct = function(id, callback) {
+        var request = {
+            method: "GET",
+            url: `${baseUrl}/product/show/${id}`
+        }
+
+        $http(request).then(function (response) {
+            $scope.product = response.data;
+            $scope.product.price = parseFloat($scope.product.price);
+            $scope.product.price_new = parseFloat($scope.product.price_new);
+            $scope.product.price_discount == 0 ? $scope.product.price_discount = false : $scope.product.price_discount = true;
+            if (callback) { callback(response.data) }
+        }, (error) => console.log(error))
+    }
+
     $scope.editProductModal = function (obj) {
+        $scope.editmode = true;
         angular.forEach(angular.element("input[type='file']"), (inputElem) => angular.element(inputElem).val(null));
         $scope.array = [];
         $scope.arrayMain = [];
         $scope.arrayimage = [];
         $scope.arrayimageMain = [];
         $scope.arrayimageCover = [];
-        $scope.editmode = true;
         $scope.selectedsize = [];
-        var request = {
-            method: "GET",
-            url: `${baseUrl}/product/show/${obj.id}`
-        }
+        $scope.image_source = '';
 
-        $http(request).then(function (response) {
-            console.log(response.data);
-            $scope.product = response.data;
-            $scope.product.price = parseFloat($scope.product.price);
-            $scope.product.price_new = parseFloat($scope.product.price_new);
-            $scope.product.price_discount == 0 ? $scope.product.price_discount = false : $scope.product.price_discount = true;
+        getOneProduct(obj.id, (res) => {            
             $scope.selectedsize = [];
             angular.forEach($scope.product.sizes, function (f) {
                 for (var i = 0; i < $scope.sizes.length; i++) {
@@ -209,9 +216,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             $scope.arrayimageMain.sort((a, b) => a.priority - b.priority);
             $scope.arrayimageCover = $scope.product.images.filter(function(f) { return f.position == 'cover'});
             $("#addEditModal").modal("show");
-        }, function (response) {
-            console.log(response);
-        })
+        });
     }
 
     $scope.editProduct = function (post) {
@@ -271,33 +276,18 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         }
 
         $http(request).then(function (response) {
-            console.log(response);
             $scope.filterProducts();
             $("#deleteModal").modal("hide");
         }, (response) => console.log(response))
     }
 
     $scope.detailProductModal = function (obj) {
-        var request = {
-            method: "POST",
-            url: "service-proxy/index.php?api=getOneProduct",
-            data: {
-                param: obj
-            },
-            headers: {
-                'Content-Type': "application/json"
-            }
-        }
-        $http(request).then(function (response) {
-            console.log(response);
-            $scope.product = response.data.response.result;
+        getOneProduct(obj.id, (res) => {
             if ($scope.product.images.length > 0) {
                 $scope.currentimage = $scope.product.images[0].image_path;
             }
             $("#detailModal").modal("show");
-        }, function (response) {
-            console.log(JSON.stringify(response));
-        })
+        });
     }
 
     $scope.slider = function (image, index) {
@@ -381,23 +371,6 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             list.push(item);
         }
     };
-
-    // $('.modal').scroll(function() {
-    //     const offsetInput = $('.colorpicker-input').offset().top;
-    //     $('.colorpicker.dropdown').css({'top': `${offsetInput + 26}px`});
-    // })
-
-    // $('.colorpicker-input').click(function() {
-    //     console.log('hii');
-    //     const offsetInput = $('.colorpicker-input').offset().top;
-    //     $('.colorpicker.dropdown').hide();
-    //     setTimeout(() => {
-    //         $('.colorpicker.dropdown').show();
-
-    //         $('.colorpicker.dropdown').css({'top': `${offsetInput + 26}px`});
-
-    //     }, 10)
-    // })
 
     $scope.exists = function (item, list) {
         return list.indexOf(item) > -1;

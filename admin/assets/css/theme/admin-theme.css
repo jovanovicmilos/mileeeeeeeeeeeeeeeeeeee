@@ -1681,6 +1681,7 @@ a:focus {
 }
 .box.box-info {
   border-top-color: #00c0ef;
+  background: #ffffff;
 }
 .box.box-danger {
   border-top-color: #dd4b39;

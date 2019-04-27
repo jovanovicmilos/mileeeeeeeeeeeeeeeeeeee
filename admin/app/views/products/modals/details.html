@@ -9,17 +9,15 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12" ng-if="product.images.length > 0">
-                        <img src="images/products/{{currentimage}}" alt='blog' style='height:400px;max-width:100%;border:1px solid #d3d3d3;' />
+                        <img src="../api/uploads/images/products/{{currentimage}}" alt='blog' style='height:400px;max-width:100%;border:1px solid #d3d3d3;' />
                     </div>
                     <div id="imageshow" class="modal">
                         <span class="close" data-dismiss="modal">&times;</span>
                         <img class="modal-content" src="{{baseimages + oneb.ImagePath}}" alt="">
                         <div id="caption"></div>
                     </div>
-                    <div ng-repeat='i in product.images' s>
-                        <div style="background:url('images/products/{{i.image_path}}') center center no-repeat;background-size:cover;width:100px;height:100px;float:left;margin:10px;cursor:pointer" ng-class="{'img-detail': i.image_path === currentimage}" ng-click='slider(i.image_path)'>
-
-                        </div>
+                    <div ng-repeat='i in product.images'>
+                        <div style="background:url('../api/uploads/images/products/{{i.image_path}}') center center no-repeat;background-size:cover;height:100px;float:left;margin:10px;cursor:pointer" ng-class="{'img-detail': i.image_path === currentimage}" ng-click='slider(i.image_path)'></div>
                     </div>
                 </div><br/>
                 <p><b>Product ID:</b> {{ product.id }}</p>
@@ -42,7 +40,6 @@
                 <p><b>Description</b> <span class="flag-icon flag-icon-gb"></span> :<br/>
                     <span ng-bind-html="product.item_information_en"></span>
                 </p>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
