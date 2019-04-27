@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="assets/css/flag-icon-css-master/css/flag-icon.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="assets/js/angular-drag-and-drop-lists-master/demo/advanced/advanced.css" />
-    <link href="assets/js/colorpicker/css/colorpicker.css" rel="stylesheet">
+    <!-- <link href="assets/js/colorpicker/css/colorpicker.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="assets/node_modules/angularjs-color-picker/dist/angularjs-color-picker.min.css" />
+    <!-- only include if you use bootstrap -->
+    <link rel="stylesheet" href="assets/node_modules/angularjs-color-picker/dist/themes/angularjs-color-picker-bootstrap.min.css" />
     <style>
         .none {
             display: none !important;
@@ -53,7 +56,6 @@
                         </a>
                         <ul class="treeview-menu">
                             <li class="active"><a href="#/"><i class="fa fa-circle-o"></i> Products</a></li>
-                            <li><a href="#/brands"><i class="fa fa-circle-o"></i> Brands</a></li>
                             <li><a href="#/sizes"><i class="fa fa-circle-o"></i> Sizes</a></li>
                             <li><a href="#/sizes"><i class="fa fa-circle-o"></i> Comments</a></li>
                         </ul>
@@ -71,7 +73,6 @@
                                     <span class="pull-right-container"><small
                                             class="label pull-right bg-green">ALL</small></span></a></li>
                             <li><a href="#/categories"><i class="fa fa-circle-o"></i> Orders </a></li>
-                            <li><a href="#/brands"><i class="fa fa-circle-o"></i> Users</a></li>
 
                         </ul>
                     </li>
@@ -108,21 +109,19 @@
     <script src="assets/js/angular-drag-and-drop-lists-master/demo/framework/demo-framework.js"></script>
     <script src="assets/js/angular-drag-and-drop-lists-master/demo/framework/view-source.js"></script>
     <script src="assets/js/angular-drag-and-drop-lists-master/demo/advanced/advanced.js"></script>
-    <script src="assets/js/colorpicker/js/bootstrap-colorpicker-module.js"></script>
-
+    <!-- <script src="assets/js/colorpicker/js/bootstrap-colorpicker-module.js"></script> -->
+    <script src="assets/node_modules/tinycolor2/dist/tinycolor-min.js"></script>
+    <script src="assets/node_modules/angularjs-color-picker/dist/angularjs-color-picker.min.js"></script>
     <script src="app/app.js"></script>
     <!-- controllers -->
     <script src="app/controllers/products.controller.js"></script>
-    <script src="app/controllers/brands.controller.js"></script>
     <script src="app/controllers/sizes.controller.js"></script>
     <!-- services -->
     <script src="app/services/products.service.js"></script>
-    <script src="app/services/brands.service.js"></script>
     <script src="app/services/sizes.service.js"></script>
     <script src="app/services/shared/multiple-select.service.js"></script>
     <!-- directives -->
     <script src="app/directives/products.directive.js"></script>
-    <script src="app/directives/brands.directive.js"></script>
     <script src="app/directives/sizes.directive.js"></script>
     <!--routes-->
     <script src="app/config/app.routes.js"></script>

@@ -72,7 +72,6 @@ class Product extends REST_Controller {
     {
         $params = json_decode($_POST["post"]);
         
-        $price = floatval($this->post('price'));
         $data = [
             'id' => null,
             'parent_id' => $params->parent_id,
@@ -85,6 +84,7 @@ class Product extends REST_Controller {
             'color' => $params->color,
             'description_en' => $params->description_en,
             'gender' => $params->gender,
+            'age' => $params->age,
             'item_information' => $params->item_information,
             'item_information_en' => $params->item_information_en,
             'insert_date' => date('Y-m-d H:i:s'),
@@ -132,7 +132,7 @@ class Product extends REST_Controller {
         
             for ($i = 0; $i < $imageLength; $i++) {
                 $time = time() + $i;
-                $filename = md5($time) . "-" . $i . '.png';
+                $filename = md5($time) . "-slider" . $i . '.png';
                 $target_file = $targetDir . $filename;
                 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
                 move_uploaded_file($_FILES['files']['tmp_name'][$i], $target_file);
@@ -148,12 +148,12 @@ class Product extends REST_Controller {
             }
         }
         
-        if(isset($_FILES['files']['name'])) {
+        if(isset($_FILES['filesMainImages']['name'])) {
             $imagesLength = count($_FILES['filesMainImages']['name']);
         
             for ($i = 0; $i < $imagesLength; $i++) {
                 $time = time() + $i;
-                $filenameMain = md5($time) . "-" . $i . '.png';
+                $filenameMain = md5($time) . "-main" . $i . '.png';
                 $target_main_file = $targetDir . $filenameMain;
                 $imageFileType = pathinfo($target_main_file, PATHINFO_EXTENSION);
                 move_uploaded_file($_FILES['filesMainImages']['tmp_name'][$i], $target_main_file);
@@ -170,32 +170,131 @@ class Product extends REST_Controller {
         }
 
        
-        $this->set_response(count($_FILES['filesMainImages']['name']), REST_Controller::HTTP_CREATED);
+        $this->set_response("success inserted", REST_Controller::HTTP_CREATED);
     }
 
     //update new Product
     public function update_post()
     {
+        $params = json_decode($_POST["post"]);
+        
         $data = [
-            'name' => $this->post('name'),
-            'name_en' => $this->post('name_en'),
-            'price' => $this->post('price'),
-            'price_new' => $this->post('price_new'),
-            'price_discount' => $this->post('price_discount'),
-            'description' => $this->post('description'),
-            'description_en' => $this->post('description_en'),
-            'gender' => $this->post('gender'),
-            'item_information' => $this->post('item_information'),
-            'item_information_en' => $this->post('item_information_en'),
+            'parent_id' => $params->parent_id,
+            'title' => $params->title,
+            'title_en' => $params->title_en,
+            'price' => $params->price,
+            'price_new' => $params->price_new,
+            'price_discount' => $params->price_discount,
+            'description' => $params->description,
+            'color' => $params->color,
+            'description_en' => $params->description_en,
+            'gender' => $params->gender,
+            'age' => $params->age,
+            'item_information' => $params->item_information,
+            'item_information_en' => $params->item_information_en,
+            'insert_date' => date('Y-m-d H:i:s'),
             'update_date' => date('Y-m-d H:i:s')
         ];
 
-        $this->db->where('id', $this->post('id'))->update($this->table, $data); 
-        $this->set_response($data, REST_Controller::HTTP_OK);
+        // Executed insert of new product
+        $this->db->where('id', $params->id)->update($this->table, $data); 
+
+        $this->db->where('product_id', $params->id)->delete('product_size'); 
+        $sizes = $params->sizes;
+        for($i = 0; $i < sizeof($sizes);$i++)
+        {
+            $productSizeData = [
+                'product_id' => $params->id,
+                'size_id' => $sizes[$i]->id
+            ];
+
+            $this->db->insert('product_size', $productSizeData);
+        }
+
+        // adding of cover image
+        $targetDir = "./uploads/images/products/";
+        $time = time();
+        $coverImageFilename = '';
+        if(isset($_FILES['file']['name'])) {
+            $this->db->where(['product_id' => $params->id, 'position' => 'cover'])->delete('product_image'); 
+            $coverImageFilename = md5($time) . "-" . basename($_FILES['file']['name']) . '.jpg';
+            $target_file = $targetDir . $coverImageFilename;
+            $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+            move_uploaded_file($_FILES['file']['tmp_name'], $target_file);
+
+            $imageData = [
+                'product_id' => $params->id,
+                'image_path' => $coverImageFilename,
+                'priority' => 0,
+                'position' => 'cover'
+            ];
+
+            $this->db->insert('product_image', $imageData); 
+        }
+
+        if(isset($_FILES['files']['name'])) {
+            $imageLength = count($_FILES['files']['name']);
+        
+            for ($i = 0; $i < $imageLength; $i++) {
+                $time = time() + $i;
+                $filename = md5($time) . "-slider" . $i . '.png';
+                $target_file = $targetDir . $filename;
+                $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['files']['tmp_name'][$i], $target_file);
+
+                $image = [
+                    'product_id' => $params->id,
+                    'image_path' => $filename,
+                    'priority' => $_FILES['files']['name'][$i],
+                    'position' => 'slider'
+                ];
+
+                $this->db->insert('product_image', $image); 
+            }
+        }
+        
+        if(isset($_FILES['filesMainImages']['name'])) {
+            $imagesLength = count($_FILES['filesMainImages']['name']);
+        
+            for ($i = 0; $i < $imagesLength; $i++) {
+                $time = time() + $i;
+                $filenameMain = md5($time) . "-main" . $i . '.png';
+                $target_main_file = $targetDir . $filenameMain;
+                $imageFileType = pathinfo($target_main_file, PATHINFO_EXTENSION);
+                move_uploaded_file($_FILES['filesMainImages']['tmp_name'][$i], $target_main_file);
+
+                $imageMain = [
+                    'product_id' => $params->id,
+                    'image_path' => $filenameMain,
+                    'priority' => $_FILES['filesMainImages']['name'][$i],
+                    'position' => 'main'
+                ];
+
+                $this->db->insert('product_image', $imageMain); 
+            }
+        }
+
+        foreach($params->images as $key) {
+            $dataimg = ['priority' => $key->priority, 'position' => $key->position];
+            $this->db->where('id', $key->id)->update('product_image', $dataimg); 
+        }
+
+        foreach($params->imagefordelete as $key) {
+            $this->db->where('id', $key->id)->delete('product_image'); 
+        }
+
+        $this->set_response('successufully updated', REST_Controller::HTTP_OK);
     }
 
     public function delete_get($id) {
         $this->db->where('id', $id)->delete($this->table); 
+        $this->db->where('product_id', $id)->delete('product_size'); 
+        $images = $this->db->query("SELECT * FROM product_image WHERE product_id={$id}")->result_array();
+        foreach ($images as $image) {
+            unlink('./uploads/images/products/' . $image['image_path']);
+        }
+
+        $this->db->where('product_id', $id)->delete('product_image'); 
         $this->set_response($id, REST_Controller::HTTP_OK);
     }
 

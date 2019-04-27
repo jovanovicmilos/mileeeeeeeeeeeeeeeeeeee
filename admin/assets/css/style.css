@@ -83,10 +83,13 @@
 .imagefordelete {
     height: 100px;
     float: left;
-    margin: 10px 10px 10px 0;
+    margin: 0 10px 10px 0;
     padding: 5px;
     position: relative;
     cursor: pointer;
+}
+.imagefordelete--active img {
+    border: 1px solid red;
 }
 
 th:not(:last-child),

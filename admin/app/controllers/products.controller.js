@@ -28,6 +28,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     $scope.files = [];
     $scope.arrayMain = [];
     $scope.arrayimageMain = [];
+    $scope.arrayimageCover = [];
     $scope.filesMain = [];
 
     $scope.filter = {
@@ -109,6 +110,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         $scope.arrayMain = [];
         $scope.arrayimage = [];
         $scope.arrayimageMain = [];
+        $scope.arrayimageCover = [];
         $scope.product = new Product();
         
         if (product) {
@@ -135,7 +137,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         
         post.append('file', $scope.coverImage, 'cover');
 
-        angular.forEach($scope.files, function (file, index) {
+        angular.forEach($scope.files, function (file) {
             post.append('files[]', file, file.priority);
         });
 
@@ -174,27 +176,25 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     }
 
     $scope.editProductModal = function (obj) {
+        angular.forEach(angular.element("input[type='file']"), (inputElem) => angular.element(inputElem).val(null));
         $scope.array = [];
+        $scope.arrayMain = [];
         $scope.arrayimage = [];
+        $scope.arrayimageMain = [];
+        $scope.arrayimageCover = [];
         $scope.editmode = true;
         $scope.selectedsize = [];
-        console.log(obj);
         var request = {
             method: "GET",
             url: `${baseUrl}/product/show/${obj.id}`
         }
 
         $http(request).then(function (response) {
-            console.log('data');
-            console.log(response);
+            console.log(response.data);
             $scope.product = response.data;
             $scope.product.price = parseFloat($scope.product.price);
             $scope.product.price_new = parseFloat($scope.product.price_new);
-            if ($scope.product.price_discount == 0) {
-                $scope.product.price_discount = false;
-            } else {
-                $scope.product.price_discount = true;
-            }
+            $scope.product.price_discount == 0 ? $scope.product.price_discount = false : $scope.product.price_discount = true;
             $scope.selectedsize = [];
             angular.forEach($scope.product.sizes, function (f) {
                 for (var i = 0; i < $scope.sizes.length; i++) {
@@ -203,49 +203,42 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
                     }
                 }
             })
-
-            // $scope.selectedfeature = [];
-            // angular.forEach($scope.product.features, function (f) {
-            //     $scope.selectedfeature.push(f.id);
-            // })
-            console.log($scope.selectedsize);
-            console.log($scope.product.images)
-            if ($scope.product.images) {
-                if ($scope.product.images.length > 0) {
-                    for (var i = 0; i < $scope.product.images.length; i++) {
-                        $scope.arrayimage.push($scope.product.images[i]);
-                    }
-                }
-            }
+            $scope.arrayimage = $scope.product.images.filter(function(f) { return f.position == 'slider'});
+            $scope.arrayimageMain = $scope.product.images.filter(function(f) { return f.position == 'main'});
+            $scope.arrayimage.sort((a, b) => a.priority - b.priority);
+            $scope.arrayimageMain.sort((a, b) => a.priority - b.priority);
+            $scope.arrayimageCover = $scope.product.images.filter(function(f) { return f.position == 'cover'});
             $("#addEditModal").modal("show");
         }, function (response) {
             console.log(response);
         })
     }
+
     $scope.editProduct = function (post) {
+        $scope.dblclick = true;
         var post = new FormData();
-        var file = $scope.coverImage;
-        post.append('file', file);
-        angular.forEach($scope.uploadfiles, function (file) {
-            post.append('files[]', file);
+        
+        post.append('file', $scope.coverImage, 'cover');
+
+        angular.forEach($scope.files, function (file) {
+            post.append('files[]', file, file.priority);
         });
-        angular.forEach($scope.uploadfilesMain, function (file) {
-            post.append('filesMainImages[]', file);
+
+        angular.forEach($scope.filesMain, function (file) {
+            post.append('filesMainImages[]', file, file.priority);
         });
-        if ($scope.product.price_discount == false) {
-            $scope.product.price_discount = 0;
-        } else {
-            $scope.product.price_discount = 1;
-        }
+
+        $scope.product.price_discount ? $scope.product.price_discount = 1 : $scope.product.price_discount = 0;
         $scope.product.features = $scope.selectedfeature;
         $scope.product.sizes = $scope.selectedsize;
-        $scope.product.imagefordelete = {
-            array: $scope.selected
-        };
+        $scope.product.imagefordelete = $scope.selected;
+        $scope.product.images = [...$scope.arrayimage, ...$scope.arrayimageMain];
+        
+        console.log($scope.product);
         post.append('post', JSON.stringify($scope.product));
         var request = {
             method: "POST",
-            url: "service-proxy/index.php?api=editProduct",
+            url: `${baseUrl}/product/update`,
             data: post,
             transformRequest: angular.identity,
             headers: {
@@ -253,15 +246,16 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
                 'Process-Data': false
             }
         }
-
         $http(request).then(function (response) {
-            console.log(response.data);
+            console.log('add prod response ', response);
             $scope.uploadfiles = [];
             $scope.uploadfilesMain = [];
             $("#addEditModal").modal("hide");
             $scope.filterProducts();
+            $scope.dblclick = false;
         }, function (response) {
-            console.log(JSON.stringify(response))
+            console.log(response);
+            $scope.dblclick = false;
         })
     }
 
@@ -271,39 +265,16 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     }
 
     $scope.deleteProduct = function (id) {
-        console.log(id)
-        var obj = {
-            id: id
-        }
         var request = {
-            method: "POST",
-            url: "service-proxy/index.php?api=deleteProduct",
-            data: {
-                param: obj
-            },
-            headers: {
-                'Content-Type': "application/json"
-            }
+            method: "GET",
+            url: `${baseUrl}/product/delete/${id}`
         }
 
         $http(request).then(function (response) {
             console.log(response);
             $scope.filterProducts();
-            $rootScope.totals();
             $("#deleteModal").modal("hide");
-        }, function (response) {
-            console.log(JSON.stringify(response))
-        })
-
-        //        console.log(id)
-        //        productsService.delete(id).then(function (response) {
-        //            console.log(response);
-        //            $scope.filterProducts();
-        //            $rootScope.totals();
-        //            $("#deleteModal").modal("hide");
-        //        }, function (response) {
-        //            console.log(JSON.stringify(response));
-        //        })
+        }, (response) => console.log(response))
     }
 
     $scope.detailProductModal = function (obj) {
@@ -338,25 +309,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         return new Date(date);
     }
 
-    //BRANDS
-    $scope.getAllBrands = function () {
-        var request = {
-            method: "POST",
-            url: "service-proxy/index.php?api=getAllBrandSelect",
-            data: {
-                param: {}
-            },
-            headers: {
-                'Content-Type': "application/json"
-            }
-        }
-        $http(request).then(function (response) {
-            $scope.brands = response.data.response.result;
-        }, function (response) {
-            console.log(JSON.stringify(response));
-        })
-    }
-    $scope.getAllBrands();
+   
     $scope.selectedfeature = [];
     $scope.getFeaturesWithGroups = function () {
         var request = {
@@ -427,7 +380,6 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         } else {
             list.push(item);
         }
-        console.log($scope.selectedfeature)
     };
 
     // $('.modal').scroll(function() {
@@ -654,7 +606,15 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         return index < 10; // Disallow dropping in the third row.
     };
 
+    $scope.changedImagePosition = function (array) {
+        console.log('hieee');
+        for (var i = 0; i < array.length; i++) {
+            array[i].priority = i;
+        }
+    }
+
     $scope.dropCallback = function (index, item, external, type) {
+        
         return item;
     };
 
@@ -735,27 +695,6 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         }
         console.log($scope.filesMain);
         $scope.modelAsJson = angular.toJson(model, true);
-    }, true);
-
-    $scope.$watch('arrayimage', function (model) {
-        console.log(model)
-        console.log('changed')
-        if (model != undefined) {
-            for (var i = 0; i < model.length; i++) {
-                model[i].priority = i + 1;
-            }
-        }
-
-    }, true);
-
-    $scope.$watch('arrayimageMain', function (model) {
-        console.log(model)
-        if (model != undefined) {
-            for (var i = 0; i < model.length; i++) {
-                model[i].priority = i + 1;
-            }
-        }
-
     }, true);
 
 }])

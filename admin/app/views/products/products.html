@@ -12,10 +12,9 @@
             <li><a href="#"><i class="fa fa-dashboard"></i> Products</a></li>
         </ol>
     </section>
-    <section ng-style="{'padding':'15px'}">
+    <!-- <section ng-style="{'padding':'15px'}">
         <div class="row">
             <div class="col-lg-3 col-xs-6">
-                <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <h3>{{ total.products }}</h3>
@@ -65,7 +64,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <section ng-style="{'padding':'0 15px'}">
         <a href="javascript:void(0)" ng-click="showfilters = !showfilters">
             <span ng-show="showfilters">Show filters <i class='fa fa-angle-up'></i></span>
@@ -87,13 +86,6 @@
                             <select class="form-control" ng-model="filter.size_id" ng-change="filterProducts()">
                             <option value="">- All sizes -</option>
                             <option ng-repeat='s in sizes' value="{{s.id}}">{{s.name}}</option>
-                        </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <label>Brands</label>
-                            <select class="form-control" ng-model="filter.brand_id" ng-change="filterProducts()">
-                            <option value="">- All brands -</option>
-                            <option ng-repeat='b in brands' value="{{b.id}}">{{b.name}}</option>
                         </select>
                         </div>
                         <div class="col-xs-2">
