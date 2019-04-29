@@ -75,17 +75,17 @@
                 <h4>Search by:</h4>
             </div>
             <div class="box-body">
-                <form>
+                <form ng-submit="filterProducts()">
                     <div class="row">
                         <div class="col-xs-3">
                             <label>Title</label>
-                            <input type="text" class="form-control" ng-model="filter.title" placeholder="Title">
+                            <input type="text" class="form-control" ng-model="filter.searchTitle" placeholder="Title">
                         </div>
                         <div class="col-xs-2">
                             <label>Gender</label>
-                            <select class="form-control" ng-model="filter.gender" ng-change="filterProducts()">
+                            <select class="form-control" ng-model="filter.searchGender" ng-change="filterProducts()">
                             <option value="">- All gender -</option>
-                            <option ng-repeat='g in genders' value="{{g.id}}">{{g.name}}</option>
+                            <option ng-repeat='g in genders' ng-value="g.id">{{g.name}}</option>
                         </select>
                         </div>
                         <div class="col-xs-3">
@@ -105,6 +105,7 @@
 
                         </div>
                     </div><br/>
+                    <button class="btn btn-primary" type="submit">Search</button>
                 </form>
             </div>
             <!-- /.box-body -->
@@ -122,7 +123,7 @@
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th> <input type="checkbox" ng-model="checkAll" ng-click="multipleSelect.checkAllOnPage(products, 'id', checkAll)" ng-checked="multipleSelect.isAllChecked(products, 'id', false)" /></th>
+                                    <th> <input type="checkbox" ng-model="checkAll" ng-click="multipleSelect.checkAllOnPage(products.content, 'id', checkAll)" ng-checked="multipleSelect.isAllChecked(products, 'id', false)" /></th>
                                     <th>Actions</th>
                                     <th></th>
                                     <th>Title <span class="flag-icon flag-icon-se"></span> ( Title <span class="flag-icon flag-icon-gb"></span> )</th>
@@ -135,7 +136,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="p in products">
+                                <tr ng-repeat="p in products.content">
                                     <td><input type="checkbox" ng-checked="multipleSelect.exist(p.id)" ng-click="multipleSelect.check(p.id)" /></td>
                                     <td class="action-buttons">
                                         <div ng-click="addProductModal(p)"><i class='fa fa-edit'></i><small> ADD SAME PRODUCT<br/> IN DIFFERENT COLOR</small></div>
@@ -168,17 +169,17 @@
 
                         </table>
                         <div class="col-xs-12 text-center">
-                            <h5 class="text-danger" ng-if='products.total <= 0'><b>No data</b></h5>
+                            <h5 class="text-danger" ng-if='products.total_rows <= 0'><b>No data</b></h5>
                         </div>
 
                     </div>
 
                 </div>
 
-                <ul uib-pagination total-items="products.total" ng-model="filter.page" ng-click="filterProducts()" max-size="filter.top" items-per-page="filter.top" class="pagination-sm pull-left" boundary-link-numbers="true" rotate="false"></ul>
-                <p class="pull-right">Total: {{ products.total }}</p>
+                <ul uib-pagination total-items="products.total_rows_filtered" ng-model="filter.page" ng-click="filterProducts()" max-size="filter.size" items-per-page="filter.size" class="pagination-sm pull-left" boundary-link-numbers="true" rotate="false"></ul>
+                <p class="pull-right">Total: {{ products.total_rows_filtered }}</p>
                 <div class="pull-left" style="padding:20px 0 0 5px">
-                    <select class="pull-left" style="width:50px;" ng-model='filter.top' ng-change="changeTotal()" ng-style="{'padding': '4px'}">
+                    <select class="pull-left" style="width:50px;" ng-model='filter.size' ng-change="changeTotal()" ng-style="{'padding': '4px'}">
                     <option ng-value="10">10</option>
                     <option ng-value="30">30</option>
                     <option ng-value="60">60</option>

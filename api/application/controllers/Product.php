@@ -25,17 +25,37 @@ class Product extends REST_Controller {
         $page = $this->get('page');
         $size = $this->get('size');
         $sortBy = $this->get('sortBy');
-        $search = $this->get('search');
+        $searchTitle = $this->get('searchTitle');
+        $searchGender = $this->get('searchGender');
+        $priceFrom = $this->get('priceFrom');
+        $priceTo = $this->get('priceTo');
 
         $config['per_page'] = (int) $size;
         $config['current_page'] = (int) $page - 1;
         $config['total_rows'] = (int) $this->db->count_all($this->table);
         $config['total_pages'] = ceil($config['total_rows'] / $config['per_page']);
-        $config['total_rows_filtered'] = 
-        $this->db->like('title', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table)->num_rows();
-        $config['content'] = 
-        $this->db->like('title', $search)->or_like('description', $search)->order_by($sortBy)->get($this->table, $config['per_page'], $config['current_page'] * $config['per_page'])->result();
+        $filteredNumRows =
+        $this->db
+            ->like('title', $searchTitle)
+            ->like('title_en', $searchTitle);
+        
+        if ($searchGender) { $filteredNumRows->where('gender', (int) $searchGender); }
+        if ($priceFrom && $priceFrom > 0) { $filteredNumRows->where('price >=', $priceFrom); }
+        if ($priceTo && $priceTo > 0) { $filteredNumRows->where('price <=', $priceTo); }
 
+        $config['total_rows_filtered'] = $filteredNumRows->get($this->table)->num_rows();
+
+         $fitlered = $this->db
+            ->like('title', $searchTitle)
+            ->like('title_en', $searchTitle);
+
+        if ($searchGender !== null && $searchGender !== '') { $fitlered->where('gender', (int) $searchGender); }
+        if ($priceFrom && $priceFrom > 0) { $fitlered->where('price >=', $priceFrom); }
+        if ($priceTo && $priceTo > 0) { $fitlered->where('price <=', $priceTo); }
+
+        $config['content'] = $fitlered
+            ->get($this->table, $config['per_page'], $config['current_page'] * $config['per_page'])
+            ->result();
         foreach($config['content'] as $i => $product) {
             $this->db->where('product_id', $product->id);
             $images_query = $this->db->get('product_image')->result_array();

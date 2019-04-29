@@ -33,12 +33,12 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
 
     $scope.filter = {
         page: 1,
-        top: 10,
-        title: '',
+        size: 10,
+        searchTitle: '',
+        searchGender: null,
         address: '',
         brand_id: '',
         size_id: '',
-        gender: '',
         price_discount: false,
         update_date: '',
         insert_date: '',
@@ -59,28 +59,23 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     }
 
     $scope.product = new Product();
-    console.log($scope.product);
     $scope.filterProducts = function () {
+        console.log($scope.filter);
         var request = {
             method: "GET",
             url: `${baseUrl}/product`,
-            params: {
-                page: 1,
-                size: 10
-            },
+            params: $scope.filter,
             headers: {
                 'Content-Type': "application/json"
             }
         }
 
-        $scope.filter.top = parseInt($scope.queryParams['top']);
 
         $http(request).then(function (response) {
             console.log('proizvodi')
-            console.log(response.data.content)
-            $scope.products = response.data.content;
+            console.log(response.data)
+            $scope.products = response.data;
             $scope.multipleSelect = multpipleSelectService;
-            $scope.filter.page = parseInt($scope.queryParams['page']);
 
         }, function (response) {
             console.log(JSON.stringify(response))
