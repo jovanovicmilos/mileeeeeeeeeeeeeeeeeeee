@@ -27,6 +27,7 @@ class Product extends REST_Controller {
         $sortBy = $this->get('sortBy');
         $searchTitle = $this->get('searchTitle');
         $searchGender = $this->get('searchGender');
+        $searchType = $this->get('searchType');
         $priceFrom = $this->get('priceFrom');
         $priceTo = $this->get('priceTo');
 
@@ -40,6 +41,7 @@ class Product extends REST_Controller {
             ->like('title_en', $searchTitle);
         
         if ($searchGender) { $filteredNumRows->where('gender', (int) $searchGender); }
+        if ($searchType) { $filteredNumRows->where('type', $searchType); }
         if ($priceFrom && $priceFrom > 0) { $filteredNumRows->where('price >=', $priceFrom); }
         if ($priceTo && $priceTo > 0) { $filteredNumRows->where('price <=', $priceTo); }
 
@@ -50,6 +52,7 @@ class Product extends REST_Controller {
             ->like('title_en', $searchTitle);
 
         if ($searchGender !== null && $searchGender !== '') { $fitlered->where('gender', (int) $searchGender); }
+        if ($searchType) { $filteredNumRows->where('type', $searchType); }
         if ($priceFrom && $priceFrom > 0) { $fitlered->where('price >=', $priceFrom); }
         if ($priceTo && $priceTo > 0) { $fitlered->where('price <=', $priceTo); }
 
@@ -93,7 +96,7 @@ class Product extends REST_Controller {
             array_push($product->images, $s);
         }
 
-        // images
+        // parent
         $related = $this->db->where('parent_id', $id)->get('products')->result_array();
         $product->related = array();
         foreach ($related as $s) {
@@ -104,8 +107,7 @@ class Product extends REST_Controller {
     }
 
     //create new Product
-    public function create_post()
-    {
+    public function create_post() {
         $params = json_decode($_POST["post"]);
         
         $data = [
@@ -121,6 +123,7 @@ class Product extends REST_Controller {
             'description_en' => $params->description_en,
             'gender' => $params->gender,
             'age' => $params->age,
+            'type' => $params->type,
             'item_information' => $params->item_information,
             'item_information_en' => $params->item_information_en,
             'insert_date' => date('Y-m-d H:i:s'),
@@ -210,8 +213,7 @@ class Product extends REST_Controller {
     }
 
     //update new Product
-    public function update_post()
-    {
+    public function update_post() {
         $params = json_decode($_POST["post"]);
         
         $data = [
@@ -226,6 +228,7 @@ class Product extends REST_Controller {
             'description_en' => $params->description_en,
             'gender' => $params->gender,
             'age' => $params->age,
+            'type' => $params->type,
             'item_information' => $params->item_information,
             'item_information_en' => $params->item_information_en,
             'insert_date' => date('Y-m-d H:i:s'),
@@ -252,7 +255,10 @@ class Product extends REST_Controller {
         $time = time();
         $coverImageFilename = '';
         if(isset($_FILES['file']['name'])) {
-            $this->db->where(['product_id' => $params->id, 'position' => 'cover'])->delete('product_image'); 
+            $productCoverImage = $this->db->where(['product_id' => $params->id, 'position' => 'cover'])->get('product_image')->row();
+            unlink('./uploads/images/products/' . $productCoverImage->image_path);
+            $this->db->where($productCoverImage->id)->delete('product_image'); 
+            
             $coverImageFilename = md5($time) . "-" . basename($_FILES['file']['name']) . '.jpg';
             $target_file = $targetDir . $coverImageFilename;
             $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
@@ -316,6 +322,7 @@ class Product extends REST_Controller {
         }
 
         foreach($params->imagefordelete as $key) {
+            unlink('./uploads/images/products/' . $key->image_path);
             $this->db->where('id', $key->id)->delete('product_image'); 
         }
 

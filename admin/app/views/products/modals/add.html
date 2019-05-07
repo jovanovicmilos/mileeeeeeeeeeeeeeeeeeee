@@ -49,10 +49,18 @@
                                     ng-style="{'background': '#ffb2b2'}" />
                             </div>
                             <div class="col-xs-2">
+                                <label for="Author">Type:</label>
+                                <select class="form-control" name="type" ng-model="product.type"
+                                    ng-options="c.name as c.name for c in categories"
+                                    ng-class="{'requierd': addeditproduct.type.$invalid}"
+                                    required>
+                                    <option value="">- Select -</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-2">
                                 <label for="Author">Gender: </label>
                                 <select class="form-control" name="gender" ng-model="product.gender"
-                                    ng-options="+(g.id) as g.name for g in genders"
-                                    ng-change='getAllMunicipalities(product.settlement_id)'
+                                    ng-options="g for g in genders"
                                     ng-class="{'requierd': addeditproduct.gender.$invalid}" required>
                                     <option value="">- Select -</option>
                                 </select>
@@ -64,7 +72,7 @@
                                     <option value="">- Select -</option>
                                     <option value="women">WOMEN</option>
                                     <option value="men">MEN</option>
-                                    <option value="children">CHILDREN</option>
+                                    <option value="kids">KIDS</option>
                                 </select>
                             </div>
                         </div>

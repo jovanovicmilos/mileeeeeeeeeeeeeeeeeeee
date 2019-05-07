@@ -84,9 +84,16 @@
                         <div class="col-xs-2">
                             <label>Gender</label>
                             <select class="form-control" ng-model="filter.searchGender" ng-change="filterProducts()">
-                            <option value="">- All gender -</option>
-                            <option ng-repeat='g in genders' ng-value="g.id">{{g.name}}</option>
-                        </select>
+                                <option value="">- All gender -</option>
+                                <option ng-repeat='g in genders' ng-value="g">{{g}}</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
+                            <label>Type</label>
+                            <select class="form-control" ng-model="filter.searchType" ng-change="filterProducts()">
+                                <option value="">- All types -</option>
+                                <option ng-repeat='type in types' ng-value="type">{{ type }}</option>
+                            </select>
                         </div>
                         <div class="col-xs-3">
                             <div class="col-md-12">

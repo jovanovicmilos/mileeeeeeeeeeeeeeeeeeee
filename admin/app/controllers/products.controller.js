@@ -4,7 +4,7 @@ function Product() {
     this.description = '';
     this.description_en = '';
     this.features = [];
-    this.color = '';
+    this.color = '000000';
     this.gender = null;
     this.item_information = '';
     this.item_information_en = '';
@@ -14,6 +14,7 @@ function Product() {
     this.sizes = [];
     this.title = '';
     this.title_en = '';
+    this.type = '';
     this.deleteCoverImage = false;
     this.parent_id = null;
 }
@@ -35,27 +36,10 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         page: 1,
         size: 10,
         searchTitle: '',
-        searchGender: null,
-        address: '',
-        brand_id: '',
-        size_id: '',
-        price_discount: false,
-        update_date: '',
-        insert_date: '',
+        searchGender: '',
+        searchType: '',
         priceFrom: '',
         priceTo: ''
-    }
-
-
-    for (var fld in $scope.queryParams) {
-        if ($scope.queryParams[fld]) {
-            console.log(fld)
-            if (fld == "update_date" || fld == 'insert_date') {
-                $scope.filter[fld] = new Date($scope.queryParams[fld]);
-            } else {
-                $scope.filter[fld] = $scope.queryParams[fld];
-            }
-        }
     }
 
     $scope.product = new Product();
@@ -81,6 +65,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             console.log(JSON.stringify(response))
         })
     }
+
     $scope.filterProducts();
 
     $scope.changeTotal = function () {
@@ -88,16 +73,24 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         $scope.filterProducts();
     }
 
-    $scope.genders = [
-        {
-            id: 0,
-            name: "Male"
-        },
-        {
-            id: 1,
-            name: "Female"
+    $scope.genders = ["male", "female"]
+
+    $scope.categories = [];
+    const getAllCategories = () => {
+        var request = {
+            method: "GET",
+            url: `${baseUrl}/category`,
+            headers: {}
         }
-    ]
+        $http(request).then(response => {
+            if (response) {
+                $scope.categories = response.data;;
+            }
+            console.log(response.data)
+        }, err => console.log(err))
+    }
+    getAllCategories();
+
 
     $scope.editmode = false;
     $scope.addProductModal = function (product) {
@@ -188,13 +181,20 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     $scope.editProductModal = function (obj) {
         $scope.editmode = true;
         angular.forEach(angular.element("input[type='file']"), (inputElem) => angular.element(inputElem).val(null));
+        $scope.image_source = "";
+        $scope.files = [];
+        $scope.filesMain = [];
+        $scope.imagefordelete = [];
+        $scope.selected = [];
         $scope.array = [];
         $scope.arrayMain = [];
         $scope.arrayimage = [];
         $scope.arrayimageMain = [];
         $scope.arrayimageCover = [];
         $scope.selectedsize = [];
-        $scope.image_source = '';
+        $scope.uploadfiles = [];
+        $scope.uploadfilesMain = [];
+        $scope.coverImage = null;
 
         getOneProduct(obj.id, (res) => {            
             $scope.selectedsize = [];
@@ -247,14 +247,12 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
             }
         }
         $http(request).then(function (response) {
-            console.log('add prod response ', response);
             $scope.uploadfiles = [];
             $scope.uploadfilesMain = [];
             $("#addEditModal").modal("hide");
             $scope.filterProducts();
             $scope.dblclick = false;
-        }, function (response) {
-            console.log(response);
+        }, function () {
             $scope.dblclick = false;
         })
     }
@@ -277,7 +275,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     }
 
     $scope.detailProductModal = function (obj) {
-        getOneProduct(obj.id, (res) => {
+        getOneProduct(obj.id, () => {
             if ($scope.product.images.length > 0) {
                 $scope.currentimage = $scope.product.images[0].image_path;
             }
@@ -285,8 +283,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         });
     }
 
-    $scope.slider = function (image, index) {
-        console.log('sadsdasda');
+    $scope.slider = function (image) {
         $scope.currentimage = image;
     }
 
@@ -294,7 +291,6 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         return new Date(date);
     }
 
-   
     $scope.selectedfeature = [];
     $scope.getFeaturesWithGroups = function () {
         var request = {
