@@ -319,12 +319,13 @@ color: #8e8e8e;
     text-align: center;
     border-radius: 20px;
     color: #8e8e8e;
-        padding-top: 7px;
+    padding-top: 7px;
     border:1px solid #777;
     display: inline-block;
     margin-left: 2px;
 }
 .product-slider {
+    width: 100%;
     padding: 24px;
     margin-top: 100px;
     position: relative;
@@ -336,15 +337,22 @@ color: #8e8e8e;
 }
 .product-slider .product-slick-img img{
     height: auto!important;
+    width: 100px !important;
+    display: inline-block;
+}
+
+.product-slider .product-slick-img div{
+    height: auto!important;
     width: 100% !important;
     display: inline-block;
 }
+
 .left-product-slick{
     background: transparent;
     border: 0;
     position: absolute;
     left: 20px;
-    bottom:calc(50% - 80px);
+    top:50%;
     font-size: 60px;
     font-weight: 200;
     z-index: 100;
@@ -357,11 +365,14 @@ color: #8e8e8e;
     font-weight: 200;
     position: absolute;
     right: 25px;
-    bottom:calc(50% - 80px);
+    top: 50%;
     z-index: 100;
     outline: none!important
 }
-.product-cover img{
+.product__cover--div{
+    margin: 30px 0;
+}
+.product__cover img{
     width: 100%;
 }
 .wear-with{
@@ -473,21 +484,23 @@ padding-left: 11px;
 .product-list{
     padding: 0 0 20px 0;
 }
-.product-list img{
-    width: 100%;
-    max-width: 292px;
-    height: 360px;
-    border:1px solid #d3d3d3;
-    object-fit: cover;
-}
+
 .product{
     text-align: center;
 }
+
 .product a,
 .product a:link,
 .product a:visited{
     color: #8e8e8e;
     text-decoration: none;
+}
+.product__image {
+    width: auto;
+    max-width: 300px;
+    height: 360px;
+    border:1px solid #d3d3d394;
+    object-fit: cover;
 }
 .product img{
     transition: all 0.3s ease;

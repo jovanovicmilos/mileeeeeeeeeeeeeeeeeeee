@@ -1,6 +1,5 @@
-var app = angular.module('estore', ["ngRoute", "ui.bootstrap", "ngSanitize", "oitozero.ngSweetAlert"]);
-
-
+var app = angular.module('estore', ["ngRoute", "ngSanitize"]);
+baseUrl = 'http://localhost/mileeeeeeeeeeeeeeeeeeee/api/index.php';
 
 app.run(function ($rootScope, $http, $window, $location, sessionService ) {
     
@@ -29,7 +28,6 @@ app.run(function ($rootScope, $http, $window, $location, sessionService ) {
 //    
     
     $rootScope.logged = false;
-    console.log($rootScope.logged);
     var getLoggedUser = function () {
         var obj = {
             param: {
@@ -47,7 +45,6 @@ app.run(function ($rootScope, $http, $window, $location, sessionService ) {
             }
         }
         $http(request).then(function (response) {
-            console.log(response)
             if(response.data.response.status == 200){
                  $rootScope.logged = true;
             }
