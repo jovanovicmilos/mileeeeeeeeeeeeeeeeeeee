@@ -53,6 +53,9 @@ app.controller('productsController', ['$scope', '$http', '$location', '$routePar
             $scope.product.price = parseFloat($scope.product.price);
             $scope.product.price_new = parseFloat($scope.product.price_new);
             $scope.product.price_discount == 0 ? $scope.product.price_discount = false : $scope.product.price_discount = true;
+            if ($scope.product.parent_id) {
+                console.log('hii 0000');
+            }
         }, (error) => console.log(error))
     }
 

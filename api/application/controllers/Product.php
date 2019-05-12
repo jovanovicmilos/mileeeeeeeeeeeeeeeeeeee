@@ -97,11 +97,18 @@ class Product extends REST_Controller {
         }
 
         // parent
-        $related = $this->db->where('parent_id', $id)->get('products')->result_array();
+        if ($product->parent_id) {
+            $related = $this->db->where('id', $product->parent_id)->get('products')->result_array();
+        } else {
+            $related = $this->db->where('parent_id', $id)->get('products')->result_array();
+        }
+
         $product->related = array();
         foreach ($related as $s) {
             array_push($product->related, $s);
         }
+
+
 
         $this->response($product, REST_Controller::HTTP_OK);
     }

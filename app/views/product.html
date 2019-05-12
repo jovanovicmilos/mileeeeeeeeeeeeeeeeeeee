@@ -1,7 +1,7 @@
 <div class="single-product">
     <div class="container">
         <div class="row">
-            <div class="col-md-7 single-img" ng-repeat="i in product.images | filter: {position: 'main'}">
+            <div class="col-md-7 single-img" ng-repeat="i in product.images | filter: {position: 'main'} | limitTo: 1">
                 <img src="./api/uploads/images/products/{{i.image_path}}" alt='product'>
             </div>
             <div class="col-md-5 single-info">
@@ -11,7 +11,8 @@
                     COLOUR: Black
                 </p> -->
                 <div class="available-colors">
-                    <div class="color-circle" style="background: #{{product.color}}"></div>
+                    <a class="color-circle" style="background: #{{product.color}}" href="#/product/{{product.id}}"></a>
+                    <a class="color-circle" ng-repeat="related in product.related" style="background: #{{related.color}}" href="#/product/{{related.id}}"></a>
                 </div>
                 <p class="info-label">Size:</p>
                 <div class="row">
