@@ -1,166 +1,130 @@
-<div id="single-product">
+<div class="single-product">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="col-md-12 slider-box">
-                    <div class="scrollleft-slider" ng-click="slider($index, 'left')">
-                        <i class="fa fa-angle-left"></i>
-                    </div>
-                    <div class='scrollright-slider' ng-click="slider($index, 'right')">
-                        <i class="fa fa-angle-right"></i>
-                    </div>
-                    <div ng-if='product.images.length == 0' style="background: url('images/noimage.png') center center no-repeat;background-size:cover;width:auto;height:100%;">
-                    </div>
-                    <img src="admin/images/products/{{currentimage}}" alt="" style="height:350px;max-height:350px;width:auto">
-                </div>
-                <div class='slider-image-div' style="display:inline-block;">
-                    <div id="imgdiv">
-                        <div ng-repeat='i in product.images'>
-                            <img src="admin/images/products/{{i.image_path}}" ng-class="{'img-detail': i.image_path === currentimage}" ng-click="slider($index, 'center')">
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-7 single-img" ng-repeat="i in product.images | filter: {position: 'main'}">
+                <img src="./api/uploads/images/products/{{i.image_path}}" alt='product'>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-5 single-info">
+                <h2>{{ product.title }}</h2>
+                <h3 class="price">{{ product.price | number:2 }} &euro;</h3><br />
+                <!-- <p class="info-label">
+                    COLOUR: Black
+                </p> -->
+                <div class="available-colors">
+                    <div class="color-circle" style="background: #{{product.color}}"></div>
+                </div>
+                <p class="info-label">Size:</p>
                 <div class="row">
-                    <div class="col-md-9">
-                        <h5>{{ product.title }}</h5>
-                    </div>
-                    <div class="col-md-3">
-                        <span class="pull-right"> <span ng-class="{'price-discount': product.price_discount == '1'}">{{ product.price }} &euro;</span> <span ng-if="product.price_discount == '1'">({{product.price_new}} &euro;)</span></span>
-                    </div>
-                </div>
-                
-                <div class="card product">
-                    <div class="card-body">
-                        <div style="position: absolute;right: 0;top:0;width: auto; height: auto; border-bottom: 100px solid transparent;border-top: 0px solid transparent; border-right:100px solid red;text-align: left;color: white" ng-if="product.price_discount == '1'">
-                            <span style="position: absolute;top:5px;left: 40px">Price<br/>Discount</span>
-                        </div>
-                        <ul>
-                            <li><b>Brand:</b> {{product.brand.name}}</li>
-                            <li><b>Size:</b>
-                                <span ng-repeat="s in product.sizes">
-                                    <span ng-class="{'price-discount': s.quantity == 0}">{{ s.name }}&nbsp;</span><span ng-hide="$last">,</span></span>
-                            </li>
-                            <li><b>Gender:</b>
-                                <span ng-if="product.gender == 0">Male</span>
-                                <span ng-if="product.gender == 1">Male</span>
-                            </li>
-                            <li><b>Age:</b> {{ product.age }}</li>
-                            <li><br/><small>{{ product.description }}</small></li>
-                            <li><br/><small ng-bind-html="product.item_information"></small></li>
-                        </ul>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary" ng-click="addToCart(product, 0)"><i class='fa fa-shopping-cart'></i> Add to cart </button></div>
+                    <div class="col-md-12">
+                        <div class="sizes">
+                            <div ng-repeat="s in sizes" ng-class="{'disable': isSizeExist(s.id) }" class="size">
+                                {{ s.size }}
+                                <div ng-if="isSizeExist(s.id)" class="disable-line"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div><br/><br/>
-        <div class="row similiar">
-            <div class="col-md-12 text-left">
-                <h4>Similar</h4>
-                <hr/>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="card product">
-                            <img class="card-img-top" src="https://img.michaels.com/L6/3/IOGLO/919444523/229971821/10508507_2000px.jpg?fit=inside|1024:1024" alt="Card image cap">
-                            <div class="card-body">
-                                <p class="card-text">Majica sad asda sdasd asd asdas d asd</p>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary btn-sm">Add to cart</button></div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">30000 &euro;</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="size-guide">
+                    <a href="#">Size Guide</a>
+                </div>
+                <div class="row add-to-shopping-cart">
+                    <div class="col-md-12">
+                        <button class="btn btn-add-to-shopping-cart btn-block">Add to shopping cart</button>
+                    </div><br />
+                </div>
+                <div class='collapse-info'>
+                    <button type="button" class="btn btn-collapse btn-block" data-toggle="collapse"
+                        data-target="#product-description">
+                        Description
+                        <i class="fa fa-angle-down pull-right"></i>
+                    </button>
+                    <div id="product-description" class="collapse">
+                        <span ng-bind-html="product.description"></span></p>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="card product">
-                            <a href="#/product/1">
-                                        <img class="card-img-top" src="http://img.michaels.com/L6/3/IOGLO/873402639/212485006/10186027_r.jpg?fit=inside|1024:1024" alt="Card image cap"></a>
-                            <div class="card-body">
-                                <p class="card-text">Majica sad asda sdasd asd asdas d asd</p>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary btn-sm">Add to cart</button></div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">30000 &euro;</div>
-                                </div>
-                            </div>
-                        </div>
+                    <button type="button" class="btn btn-collapse btn-block" data-toggle="collapse"
+                        data-target="#item-information">
+                        Item information <i class="fa fa-angle-down pull-right"></i>
+                    </button>
+                    <div id="item-information" class="collapse">
+                        <span ng-bind-html="product.item_information"></span>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="card product">
-                            <img class="card-img-top" src="https://img.michaels.com/L6/3/IOGLO/919444523/229971821/10508507_2000px.jpg?fit=inside|1024:1024" alt="Card image cap">
-                            <div class="card-body">
-                                <p class="card-text">Majica sad asda sdasd asd asdas d asd</p>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary btn-sm">Add to cart</button></div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">30000 &euro;</div>
-                                </div>
-                            </div>
-                        </div>
+                    <button type="button" class="btn btn-collapse btn-block" data-toggle="collapse"
+                        data-target="#shipping-and-returns">
+                        Shipping &amp; returns <i class="fa fa-angle-down pull-right"></i>
+                    </button>
+                    <div id="shipping-and-returns" class="collapse">
+                        Default text for shipping.
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="card product">
-                            <img class="card-img-top" src="https://img.michaels.com/L6/3/IOGLO/919444523/229971821/10508507_2000px.jpg?fit=inside|1024:1024" alt="Card image cap">
-                            <div class="card-body">
-                                <p class="card-text">Majica sad asda sdasd asd asdas d asd</p>
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6"> <button class="btn btn-secondary btn-sm">Add to cart</button></div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">30000 &euro;</div>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="share-item">
+                    <div>
+                        <div style="display:inline-block;margin-right: 30px;">Share this item </div>
+                        <div class="circle-share"><i class="fa fa-envelope"></i></div>
+                        <div class="circle-share"><i class="fa fa-instagram"></i></div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            var box = $("#imgdiv");
-            $(".scrollleft-slider").click(function() {
-                var leftPos = $('#imgdiv').scrollLeft();
-                var imagesize = $('#imgdiv img').innerWidth();
-                box.animate({
-                    scrollLeft: leftPos - imagesize,
-                })
-            })
-            $(".scrollright-slider").click(function() {
-                var leftPos = $('#imgdiv').scrollLeft();
-                var imagesize = $('#imgdiv img').innerWidth();
-                box.animate({
-                    scrollLeft: leftPos + imagesize,
-                })
-            })
-            setTimeout(function() {
-                $('.plan-property img').css({
-                    'display': 'none'
-                });
-                var plansize = $('.plan-property img').height();
-                if (plansize > 400) {
-                    $('.plan-property img').css({
-                        'width': 'auto',
-                        'height': '450px',
-                        'display': 'block'
-                    })
-                } else {
-                    $('.plan-property img').css({
-                        'width': '100%',
-                        height: 'auto',
-                        'display': 'block'
-                    })
-                }
-            }, 500);
-            $('.slider-box').bind('contextmenu', function(e) {
-                return false;
-            });
-            $('.slider-image-div').bind('contextmenu', function(e) {
-                return false;
-            });
-        });
-
-    </script>
+    <div class="container">
+        <div class="content" style="position:relative;margin:20px 0;">
+            <slick class="slider" settings="slickConfig" ng-if="slickConfigLoaded" dots="true">
+                <div ng-repeat="i in product.images | filter: {position: 'slider'}">
+                    <div class="" style="width:100%">
+                        <img src="./api/uploads/images/products/{{i.image_path}}" style="width:100%;max-height: 815px;object-fit: contain" alt="image" />
+                    </div>
+                </div>
+            </slick>
+            <button ng-click="slickConfig.method.slickPrev()" class="left-product-slick">
+                <i class="fa fa-angle-left"></i>
+            </button>
+            <button ng-click="slickConfig.method.slickNext()" class="right-product-slick">
+                <i class="fa fa-angle-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container product__cover">
+        <div class="product__cover--div" ng-repeat="i in product.images | filter: { position: 'cover' } | limitTo: 1">
+            <img src="./api/uploads/images/products/{{i.image_path}}" alt='cover'>
+        </div>
+    </div>
+    <!-- <div class="container wear-with product-list">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>WEAR WITH</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 product">
+                <a href="">
+                    <img src="http://dimg.dillards.com/is/image/DillardsZoom/zoom/perry-ellis-big--tall-herringbone-flat-front-pants/04137298_zi_light_beige.jpg"
+                        alt=''>
+                    <div class="product-info">
+                        <p class="product-title">Skinny shirt Ankle Jeans hirt Ankle Jeans hirt Ankle Jeans</p>
+                        <p class="product-price">399,00</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 product">
+                <a href="">
+                    <img src="http://dimg.dillards.com/is/image/DillardsZoom/zoom/perry-ellis-big--tall-herringbone-flat-front-pants/04137298_zi_light_beige.jpg"
+                        alt=''>
+                    <div class="product-info">
+                        <p class="product-title">Skinny shirt Ankle Jeans hirt Ankle Jeans hirt Ankle Jeans</p>
+                        <p class="product-price">399,00</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 product">
+                <a href="">
+                    <img src="http://dimg.dillards.com/is/image/DillardsZoom/zoom/perry-ellis-big--tall-herringbone-flat-front-pants/04137298_zi_light_beige.jpg"
+                        alt=''>
+                    <div class="product-info">
+                        <p class="product-title">Skinny shirt Ankle Jeans hirt Ankle Jeans hirt Ankle Jeans</p>
+                        <p class="product-price">399,00</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div> -->
 </div>

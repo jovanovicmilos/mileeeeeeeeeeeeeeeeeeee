@@ -256,8 +256,10 @@ class Product extends REST_Controller {
         $coverImageFilename = '';
         if(isset($_FILES['file']['name'])) {
             $productCoverImage = $this->db->where(['product_id' => $params->id, 'position' => 'cover'])->get('product_image')->row();
-            unlink('./uploads/images/products/' . $productCoverImage->image_path);
-            $this->db->where($productCoverImage->id)->delete('product_image'); 
+            if ($productCoverImage) {
+                unlink('./uploads/images/products/' . $productCoverImage->image_path);
+                $this->db->where($productCoverImage->id)->delete('product_image'); 
+            }
             
             $coverImageFilename = md5($time) . "-" . basename($_FILES['file']['name']) . '.jpg';
             $target_file = $targetDir . $coverImageFilename;

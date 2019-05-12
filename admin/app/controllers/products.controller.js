@@ -217,7 +217,7 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
     $scope.editProduct = function (post) {
         $scope.dblclick = true;
         var post = new FormData();
-        
+        console.log($scope.coverImage);
         post.append('file', $scope.coverImage, 'cover');
 
         angular.forEach($scope.files, function (file) {

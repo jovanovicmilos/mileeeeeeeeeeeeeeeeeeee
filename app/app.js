@@ -1,4 +1,4 @@
-var app = angular.module('estore', ["ngRoute", "ngSanitize"]);
+var app = angular.module('estore', ["ngRoute", "ngSanitize", "slickCarousel"]);
 baseUrl = 'http://localhost/mileeeeeeeeeeeeeeeeeeee/api/index.php';
 
 app.run(function ($rootScope, $http, $window, $location, sessionService ) {

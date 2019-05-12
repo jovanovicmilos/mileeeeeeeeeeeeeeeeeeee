@@ -36,7 +36,7 @@
     <div class="container">
         <div class="row">
             <div ng-repeat="product in products.content" class="col-md-3 product">
-                <a href="single.html">
+                <a href="#/product/{{ product.id }}">
                     <div class="product__image"
                         ng-style="{'background': 'url(./api/uploads/images/products/{{ product.images[0].image_path }}) center center no-repeat', 'background-size': 'auto 100%'}">
                     </div>
