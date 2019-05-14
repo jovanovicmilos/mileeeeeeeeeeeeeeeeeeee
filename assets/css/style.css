@@ -205,7 +205,8 @@ textarea:focus, input:focus{
 .single-product .single-img img{
     max-width: 100%;
     width:auto;
-    transform: scale(0.9)
+    transform: scale(0.9);
+    max-height: 500px;
 }
 .single-product .single-info h2{
     font-weight: 600;

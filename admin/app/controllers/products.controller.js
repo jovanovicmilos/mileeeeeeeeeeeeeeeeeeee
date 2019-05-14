@@ -102,14 +102,15 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
         $scope.product = new Product();
         
         if (product) {
-            if (product.parent_id) {
-                $scope.product.parent_id = product.parent_id;
-            } else {
-                $scope.product.parent_id = product.id;
-            }
+            getOneProduct(product.id, (obj) => {
+                $scope.product = obj;
+                obj.parent_id ? $scope.product.parent_id = obj.parent_id : $scope.product.parent_id = obj.id;
+                $scope.product.id = null;
+                console.log($scope.product);
+            })
+            
+            
         }
-
-        console.log($scope.product);
 
         $scope.selectedsize = [];
         $scope.editmode = false;

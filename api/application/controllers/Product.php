@@ -44,7 +44,8 @@ class Product extends REST_Controller {
         if ($searchType) { $filteredNumRows->where('type', $searchType); }
         if ($priceFrom && $priceFrom > 0) { $filteredNumRows->where('price >=', $priceFrom); }
         if ($priceTo && $priceTo > 0) { $filteredNumRows->where('price <=', $priceTo); }
-
+        
+        $filteredNumRows->where('parent_id is NOT NULL', null, FALSE);
         $config['total_rows_filtered'] = $filteredNumRows->get($this->table)->num_rows();
 
          $fitlered = $this->db
@@ -67,12 +68,15 @@ class Product extends REST_Controller {
             
             $this->db->where('product_id', $product->id);
             $product_sizes_query = $this->db->get('product_size')->result_array();
-            
             $config['content'][$i]->sizes = array();
             foreach($product_sizes_query as $size) {
                 $single_size = $this->db->where('id', $size["size_id"])->get('sizes')->row();
                 array_push($config['content'][$i]->sizes, $single_size);
             }
+
+            $this->db->where('parent_id', $product->id);
+            $products_related_query = $this->db->get('products')->result_array();
+            $config['content'][$i]->related = $products_related_query;
          }
 
         $this->response($config, REST_Controller::HTTP_OK);
@@ -97,10 +101,11 @@ class Product extends REST_Controller {
         }
 
         // parent
-        if ($product->parent_id) {
-            $related = $this->db->where('id', $product->parent_id)->get('products')->result_array();
-        } else {
+        $related = array();
+        if (!$product->parent_id) {
             $related = $this->db->where('parent_id', $id)->get('products')->result_array();
+        } else {
+            $related = $this->db->where("(parent_id='{$product->parent_id}' AND id !='{$id}')")->or_where('id', $product->parent_id)->get('products')->result_array();
         }
 
         $product->related = array();
