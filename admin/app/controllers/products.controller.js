@@ -108,8 +108,6 @@ app.controller('productsController', ['$scope', '$http', 'productsService', 'mul
                 $scope.product.id = null;
                 console.log($scope.product);
             })
-            
-            
         }
 
         $scope.selectedsize = [];

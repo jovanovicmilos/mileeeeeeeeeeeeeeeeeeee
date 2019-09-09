@@ -72,7 +72,6 @@ app.controller('productsController', ['$scope', '$http', '$location', '$routePar
         }
         $http(request).then(response => {
             $scope.sizes = response.data;;
-            console.log(response.data)
         }, err => console.log(err))
     }
     getAllSizes();
